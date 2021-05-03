@@ -15,7 +15,7 @@ sourceSets.main {
 }
 
 application {
-    mainClass.set("ru.team10.graphApp.MainApp.kt")
+    mainClass.set("ru.team10.graphApp.MainApp")
 }
 
 dependencies {
