@@ -15,13 +15,30 @@ class MainView : View("Graph Application") {
 
             add(graph)
         }
+
+        left = vbox(10) {
+
+            button {
+                action {
+                    apply()
+                }
+            }
+        }
     }
 
     init {
 
         currentStage?.apply {
 
-            layout.place(width, height, graph.vertices())
+            layout.randomLayout(width, height, graph)
+        }
+    }
+
+    fun apply() {
+
+        currentStage?.apply {
+
+            layout.applyForceAtlas2(width, height, graph)
         }
     }
 }
