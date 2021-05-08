@@ -3,7 +3,6 @@ package ru.team10.graphApp.view
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
-import kotlin.math.E
 import kotlin.random.Random
 
 object props {
@@ -11,17 +10,21 @@ object props {
     val sample = Graph().apply {
 
         val nodes = mutableListOf<Vertex>()
-        repeat (100) {
+        repeat (10) {
 
             nodes.add(Vertex("kek $it"))
             addVertex(nodes[it])
         }
-        for (i in 0..98) {
+//        val repeats = Random.nextInt(70, 100)
+//        repeat(repeats) {
+//
+//            val i = Random.nextInt(0, 20)
+//            val j = Random.nextInt(0, 20)
+//            if (i != j) addEdge(Edge(nodes[i], nodes[j]))
+//        }
+        for (i in 0..8) {
 
-            for (j in i+1..99) {
-
-                addEdge(Edge(nodes[i], nodes[j]))
-            }
+            for (j in i+1..9) addEdge(Edge(nodes[i], nodes[j]))
         }
 //        val a = Vertex("A")
 //        val b = Vertex("B")
@@ -42,10 +45,5 @@ object props {
 //        addEdge(Edge(b, e))
 //        addEdge(Edge(c, d))
 //        addEdge(Edge(c, e))
-//        addEdge(Edge(d, e))
-
-
-
-
     }
 }

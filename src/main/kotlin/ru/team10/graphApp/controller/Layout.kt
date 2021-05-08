@@ -1,5 +1,6 @@
 package ru.team10.graphApp.controller
 
+import javafx.animation.AnimationTimer
 import javafx.scene.paint.Color
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
@@ -8,15 +9,17 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-private const val antiCollisionCoeff = 1
-private const val scaling = 0.1
-private const val speed = 0.05
+private const val antiCollisionCoeff = 0.5
+private const val scaling = 10
+private const val speed = 0.1
+private const val gravity = 0.05
 
 class Layout: Controller() {
 
     fun randomLayout(width: Double, height: Double, graph: GraphView) {
 
         for (v in graph.vertices()) {
+
             val randomX = Random.nextDouble(50.0, width - 50.0)
             val randomY = Random.nextDouble(50.0, height - 50.0)
             v.position = randomX to randomY
@@ -24,24 +27,32 @@ class Layout: Controller() {
         }
     }
 
-    fun applyForceAtlas2(width: Double, height: Double, graph: GraphView) {
+    inner class Anim(private val graph: GraphView): AnimationTimer() {
+        override fun handle(now: Long) {
 
-        runAsync {
-            while(true) {
-                for (edge in graph.edges()) {
-                    applyAttractionForce(edge.first, edge.second, edge.edge.weight)
-                }
-                val pairs = getAllNodePairs(graph.vertices())
-                for (pair in pairs) {
-                    applyRepulsionForce(pair.first, pair.second)
-                }
-                for (node in graph.vertices()) {
-                    node.position = node.layoutCenterX to node.layoutCenterY
-                }
-                Thread.sleep(50)
+            for (edge in graph.edges()) {
+                applyAttractionForce(edge.first, edge.second, edge.edge.weight)
             }
+            val pairs = getAllNodePairs(graph.vertices())
+            for (pair in pairs) {
+                applyRepulsionForce(pair.first, pair.second)
+            }
+            for (node in graph.vertices()) {
+                applyGravity(node)
+            }
+            for (node in graph.vertices()) {
+                node.position = node.layoutCenterX to node.layoutCenterY
+            }
+            Thread.sleep(50)
         }
     }
+
+    fun applyForceAtlas2(graph: GraphView) {
+
+        val kek = Anim(graph)
+        kek.start()
+    }
+
 
     private fun computeDistance(v: VertexView, u: VertexView) = sqrt((v.centerX - u.centerX).pow(2) + (v.centerY - u.centerY).pow(2))
 
@@ -88,14 +99,26 @@ class Layout: Controller() {
         }
     }
 
+    fun applyGravity(v: VertexView) {
+
+        val xCenter = primaryStage.width / 2
+        val yCenter = primaryStage.height / 2
+        val xDist = v.centerX - xCenter
+        val yDist = v.centerY - yCenter
+        val dist = sqrt(xDist.pow(2) + yDist.pow(2)) - v.radius
+        if (dist > 0) {
+            val factor = speed * (v.vertex.incidents + 1) * gravity
+            v.layoutCenterX -= xDist * factor
+            v.layoutCenterY -= yDist * factor
+        }
+    }
+
     private fun getAllNodePairs(nodes: Collection<VertexView>): Collection<Pair<VertexView, VertexView>> {
 
         val listNodes = nodes.toList()
         val pairs = mutableListOf<Pair<VertexView, VertexView>>()
         for (i in listNodes.indices) {
-
             for (j in i+1 until listNodes.size) {
-
                 pairs.add(listNodes[i] to listNodes[j])
             }
         }

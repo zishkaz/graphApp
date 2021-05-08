@@ -20,7 +20,9 @@ class MainView : View("Graph Application") {
 
             button {
                 action {
-                    apply()
+                    runAsync {
+                        apply()
+                    }
                 }
             }
         }
@@ -38,7 +40,7 @@ class MainView : View("Graph Application") {
 
         currentStage?.apply {
 
-            layout.applyForceAtlas2(width, height, graph)
+            layout.applyForceAtlas2(graph)
         }
     }
 }

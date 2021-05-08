@@ -1,11 +1,7 @@
 package ru.team10.graphApp
 
 import javafx.stage.Stage
-import ru.team10.graphApp.controller.Layout
-import ru.team10.graphApp.view.EdgeView
-import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.MainView
-import ru.team10.graphApp.view.props
 import tornadofx.App
 import tornadofx.launch
 
@@ -18,6 +14,8 @@ class MainApp: App(MainView::class) {
         }
         super.start(stage)
         //started
+        stage.widthProperty().addListener { _, _, _ -> run { stage.centerOnScreen() } }
+        stage.heightProperty().addListener { _, _, _ -> run {stage.centerOnScreen()} }
     }
 }
 

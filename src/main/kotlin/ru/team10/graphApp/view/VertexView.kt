@@ -4,7 +4,6 @@ import javafx.beans.property.DoubleProperty
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import ru.team10.graphApp.model.Vertex
-import kotlin.math.pow
 
 class VertexView(
     val vertex: Vertex,

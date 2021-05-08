@@ -4,7 +4,6 @@ import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Graph
 import tornadofx.add
-import java.lang.IllegalStateException
 
 class GraphView(graph: Graph): Pane() {
 
@@ -25,11 +24,11 @@ class GraphView(graph: Graph): Pane() {
     fun edges(): Collection<EdgeView> = edges.values
 
     init {
-        vertices().forEach {
+        edges().forEach {
 
             add(it)
         }
-        edges().forEach {
+        vertices().forEach {
 
             add(it)
         }
