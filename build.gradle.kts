@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
 plugins {
     kotlin("jvm") version "1.4.0"
     application
@@ -18,9 +19,13 @@ application {
     mainClass.set("ru.team10.graphApp.MainApp")
 }
 
+
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("no.tornado:tornadofx:1.7.20") {
+        exclude("org.jetbrains.kotlin")
+    }
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC") {
         exclude("org.jetbrains.kotlin")
     }
 }

@@ -9,7 +9,7 @@ class GraphView(graph: Graph): Pane() {
 
     private val vertices by lazy {
 
-        graph.vertices().associateWith { VertexView(it, 0.0, 0.0, tornadofx.doubleProperty(10.0), Color.BLACK) }
+        graph.vertices().associateWith { VertexView(it, 0.0, 0.0, Color.AQUA) }
     }
 
     private val edges by lazy {

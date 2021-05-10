@@ -10,21 +10,21 @@ object props {
     val sample = Graph().apply {
 
         val nodes = mutableListOf<Vertex>()
-        repeat (10) {
+        repeat (1000) {
 
             nodes.add(Vertex("kek $it"))
             addVertex(nodes[it])
         }
-//        val repeats = Random.nextInt(70, 100)
+//        val repeats = Random.nextInt(20, 40)
 //        repeat(repeats) {
 //
-//            val i = Random.nextInt(0, 20)
-//            val j = Random.nextInt(0, 20)
+//            val i = Random.nextInt(0, 60)
+//            val j = Random.nextInt(0, 60)
 //            if (i != j) addEdge(Edge(nodes[i], nodes[j]))
 //        }
-        for (i in 0..8) {
+        for (i in 0..998) {
 
-            for (j in i+1..9) addEdge(Edge(nodes[i], nodes[j]))
+            for (j in i+1..999) addEdge(Edge(nodes[i], nodes[j]))
         }
 //        val a = Vertex("A")
 //        val b = Vertex("B")

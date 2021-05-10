@@ -14,8 +14,8 @@ class MainApp: App(MainView::class) {
         }
         super.start(stage)
         //started
-        stage.widthProperty().addListener { _, _, _ -> run { stage.centerOnScreen() } }
-        stage.heightProperty().addListener { _, _, _ -> run {stage.centerOnScreen()} }
+//        stage.widthProperty().addListener { _, _, _ -> run { stage.centerOnScreen() } }
+//        stage.heightProperty().addListener { _, _, _ -> run {stage.centerOnScreen()} }
     }
 }
 
