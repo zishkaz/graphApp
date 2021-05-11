@@ -33,7 +33,7 @@ class Layout: Controller() {
         }
     }
 
-    private inner class Anim(private val graph: GraphView): AnimationTimer() {
+    inner class Anim(private val graph: GraphView): AnimationTimer() {
 
         override fun handle(now: Long) {
 
@@ -165,10 +165,10 @@ class Layout: Controller() {
         }
     }
 
-    fun applyForceAtlas2(graph: GraphView) {
+    fun applyForceAtlas2(graph: GraphView): Anim {
 
         val kek = Anim(graph)
-        kek.start()
+        return kek
     }
 
     private fun computeDistance(v: VertexView, u: VertexView) = sqrt((v.centerX - u.centerX).pow(2) + (v.centerY - u.centerY).pow(2))

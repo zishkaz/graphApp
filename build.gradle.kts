@@ -13,7 +13,9 @@ repositories {
 
 sourceSets.main {
     java.srcDirs("src")
+    resources.srcDirs("src/resources")
 }
+
 
 application {
     mainClass.set("ru.team10.graphApp.MainApp")
