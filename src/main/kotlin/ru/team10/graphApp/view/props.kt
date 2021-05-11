@@ -15,17 +15,17 @@ object props {
             nodes.add(Vertex("kek $it"))
             addVertex(nodes[it])
         }
-//        val repeats = Random.nextInt(20, 40)
-//        repeat(repeats) {
-//
-//            val i = Random.nextInt(0, 60)
-//            val j = Random.nextInt(0, 60)
-//            if (i != j) addEdge(Edge(nodes[i], nodes[j]))
-//        }
-        for (i in 0..998) {
+        val repeats = Random.nextInt(5000, 9000)
+        repeat(repeats) {
 
-            for (j in i+1..999) addEdge(Edge(nodes[i], nodes[j]))
+            val i = Random.nextInt(0, 1000)
+            val j = Random.nextInt(0, 1000)
+            if (i != j) addEdge(Edge(nodes[i], nodes[j]))
         }
+//        for (i in 0..998) {
+//
+//            for (j in i+1..999) addEdge(Edge(nodes[i], nodes[j]))
+//        }
 //        val a = Vertex("A")
 //        val b = Vertex("B")
 //        val c = Vertex("C")

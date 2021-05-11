@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle
 import ru.team10.graphApp.model.Vertex
 import tornadofx.doubleProperty
 
-var radius = 7.0
+var radius = 4.0
 
 class VertexView(
     val vertex: Vertex,

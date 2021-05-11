@@ -15,8 +15,8 @@ class Graph {
 
         if (!edges.containsKey(e.first to e.second) && !edges.containsKey(e.second to e.first)) {
             edges[Pair(e.first, e.second)] = e
-            e.first.incidents++
-            e.second.incidents++
+            e.first.mass++
+            e.second.mass++
         }
     }
 }
