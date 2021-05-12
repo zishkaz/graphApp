@@ -8,8 +8,11 @@ import ru.team10.graphApp.controller.Layout
 import tornadofx.*
 import javafx.scene.input.KeyCode
 import ru.team10.graphApp.controller.Centrality
-import ru.team10.graphApp.communityDetection.Leiden
+import ru.team10.graphApp.controller.Leiden
+import ru.team10.graphApp.loader.FileLoader
+import ru.team10.graphApp.loader.GraphLoader
 import ru.team10.graphApp.model.Graph
+import java.nio.file.FileSystems
 
 var constant1: String = "123"
 private var graphFilename: String? = "src/input.txt"
@@ -17,8 +20,9 @@ private lateinit var leiden: Leiden
 
 class MainView : View("Graph Application") {
 
-    private val graphView = GraphView(props.sample)
-    private val graph = Graph()
+    val loader: GraphLoader = FileLoader()
+    private val graph = loader.loadGraph(FileSystems.getDefault().getPath("src" ,"graph.json").toString())
+    private val graphView by lazy { GraphView(graph) }
     private val layout1 = Layout()
     private val centr = Centrality()
 
@@ -32,7 +36,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.start()
-                centr.harmonic(props.sample, graphView.vertices())
+//                centr.harmonic(props.sample, graphView.vertices())
             }
         }
 
@@ -41,7 +45,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.stop()
-                centr.harmonic(props.sample, graphView.vertices())
+//                centr.harmonic(props.sample, graphView.vertices())
             }
         }
 
@@ -175,7 +179,7 @@ class MainView : View("Graph Application") {
     init {
         currentStage?.apply {
             layout1.randomLayout(width, height, graphView)
-            centr.harmonic(props.sample, graphView.vertices())
+//            centr.harmonic(props.sample, graphView.vertices())
         }
     }
 

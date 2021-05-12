@@ -1,4 +1,4 @@
-package ru.team10.graphApp.communityDetection
+package ru.team10.graphApp.controller
 
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex

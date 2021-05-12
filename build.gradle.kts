@@ -2,9 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.5.0"
     application
     id("org.openjfx.javafxplugin") version "0.0.9"
+    kotlin("plugin.serialization") version "1.5.0"
 }
 
 repositories {
@@ -32,6 +33,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC") {
         exclude("org.jetbrains.kotlin")
     }
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0")
 }
 
 val compileKotlin: KotlinCompile by tasks

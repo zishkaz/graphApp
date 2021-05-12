@@ -14,14 +14,14 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 
 private const val antiCollisionCoeff = 100.0
-internal var scaling = 15.0
-internal var gravity = 1.5
+internal var scaling = 1000.0
+internal var gravity = 0.1
 internal var jitterTolerance = 0.1
 private const val minSpeedEfficiency = 0.05
 private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
 private val barnesHutTheta = 1.2
-private var isBarnesHutActive = true
+private var isBarnesHutActive = false
 
 class Layout: Controller() {
 
