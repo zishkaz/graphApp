@@ -31,8 +31,4 @@ class VertexView(
         set(value) {
             fill = value
         }
-    var dx = 0.0
-    var dy = 0.0
-    var dxOld = 0.0
-    var dyOld = 0.0
 }

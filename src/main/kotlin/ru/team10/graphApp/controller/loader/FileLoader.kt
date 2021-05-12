@@ -18,18 +18,16 @@ class FileLoader: GraphLoader, Controller() {
 
         val json = loadJsonObject(Path(data))
         val vertices = json.getJsonArray("vertices")?.map {
-
             val jsonObject = it.asJsonObject()
             val id = if (jsonObject.containsKey("id")) jsonObject.getString("id") else throw NoSuchFieldException("Missed id for a vertex!")
             val communityID = if (jsonObject.containsKey("communityID")) jsonObject.getInt("communityID") else -1
             val centralityRang = if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(-2000.0, 2000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(-2000.0, 2000.0)
-            val vertex = Vertex(id, communityID, centralityRang.toDouble())
+            val vertex = Vertex(id, centralityRang.toDouble(), communityID)
             VertexView(vertex, posX, posY, Color.AQUA)
         } ?: throw NoSuchFieldException("Empty graph can't be loaded!")
         val edges = json.getJsonArray("edges")?.map {
-
             val jsonObject = it.asJsonObject()
             val first = jsonObject.getInt("first")
             val second = jsonObject.getInt("second")

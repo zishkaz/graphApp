@@ -37,9 +37,9 @@ class Centrality : Controller() {
         var min: Double = Double.MAX_VALUE
 
         for (i in vert) {
-            i.rank = setUpVertices(i, vert, verticesExtraData)
-            if (i.rank.compareTo(min) < 0) min = i.rank
-            if (i.rank.compareTo(max) > 0) max = i.rank
+            i.centralityRang = setUpVertices(i, vert, verticesExtraData)
+            if (i.centralityRang.compareTo(min) < 0) min = i.centralityRang
+            if (i.centralityRang.compareTo(max) > 0) max = i.centralityRang
         }
 
         val step1 = (max - min) / vert.size
@@ -86,7 +86,7 @@ class Centrality : Controller() {
     private fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {
 
         for (v in vertices) {// SET COLORS
-            val x = (v.vertex.rank - min) / step1
+            val x = (v.vertex.centralityRang - min) / step1
             v.color = Color.rgb(100, 255 - (step2 * x).toInt(), 255)
         }
     }

@@ -2,18 +2,17 @@ package ru.team10.graphApp.view
 
 import javafx.collections.FXCollections
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import ru.team10.graphApp.controller.algorithms.Layout
-import tornadofx.*
-import javafx.scene.input.KeyCode
 import javafx.stage.FileChooser
 import javafx.stage.Popup
 import ru.team10.graphApp.controller.algorithms.Centrality
+import ru.team10.graphApp.controller.algorithms.Layout
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
-import ru.team10.graphApp.controller.loader.GraphLoader
-import java.nio.file.FileSystems
+import ru.team10.graphApp.model.Graph
+import tornadofx.*
 
 var constant1: String = "123"
 private var graphFilename: String? = "src/input.txt"
@@ -21,17 +20,16 @@ private lateinit var leiden: Leiden
 
 class MainView : View("Graph Application") {
 
-    val loader: GraphLoader = FileLoader()
-    private val graph = loader.loadGraph(FileSystems.getDefault().getPath("src" ,"graph.json").toString())
+    private var graph = Graph()
     private val graphView by lazy { GraphView(graph) }
     private val layout1 = Layout()
-    private val centr = Centrality()
+    private val centrality = Centrality()
 
     //var constant: TextField by singleAssign()
     private val layout = Layout().applyForceAtlas2(graphView)
 
     override val root = borderpane {
-        this.getStylesheets().add("1.css")
+        this.stylesheets.add("1.css")
         fun apply() {
 
             currentStage?.apply {
@@ -68,7 +66,7 @@ class MainView : View("Graph Application") {
             }
 
             button("Reset default settings") {
-                this.getStyleClass().add("button1")
+                this.styleClass.add("button1")
                 action {
 
                 }
@@ -110,8 +108,8 @@ class MainView : View("Graph Application") {
                             fileChooser.extensionFilters.add(importFilter)
                             fileChooser.title = "Open Resource File"
                             val file = fileChooser.showOpenDialog(window)
-                            if (file != null){
-                                //
+                            file?.let {
+                                graph = FileLoader().loadGraph(file.path)
                             }
                         }
                     }
@@ -145,7 +143,7 @@ class MainView : View("Graph Application") {
                         }
                     }
                     val r = button()
-                    r.setText("a = $constant1")
+                    r.text = "a = $constant1"
                     r.style = "-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 5;"
                     r.setOnMouseReleased {
                         r.isDisable = true
@@ -155,10 +153,10 @@ class MainView : View("Graph Application") {
                             val filterTextField: TextField = textfield()
                             filterTextField.fitToSize(r)
                             filterTextField.setOnKeyReleased { event ->
-                                if (event.getCode() == KeyCode.ENTER) {
+                                if (event.code == KeyCode.ENTER) {
                                     println("Logging in as ${filterTextField.text} ")
                                     constant1 = filterTextField.text
-                                    r.setText("a = $constant1")
+                                    r.text = "a = $constant1"
                                     hide()
                                     r.isDisable = false
                                 }

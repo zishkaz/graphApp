@@ -2,6 +2,7 @@ package ru.team10.graphApp.controller.algorithms
 
 import javafx.animation.AnimationTimer
 import javafx.geometry.Point2D
+import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.EdgeView
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
@@ -20,10 +21,15 @@ internal var jitterTolerance = 0.1
 private const val minSpeedEfficiency = 0.05
 private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
-private val barnesHutTheta = 1.2
+private const val barnesHutTheta = 1.2
 private var isBarnesHutActive = false
 
 class Layout: Controller() {
+
+    private val dx = hashMapOf<VertexView, Double>()
+    private val dy = hashMapOf<VertexView, Double>()
+    private val dxOld = hashMapOf<VertexView, Double>()
+    private val dyOld = hashMapOf<VertexView, Double>()
 
     fun randomLayout(width: Double, height: Double, graph: GraphView) {
         for (v in graph.vertices()) {
@@ -49,9 +55,9 @@ class Layout: Controller() {
             var totalSwinging = 0.0
             var totalEffectiveTraction = 0.0
             for (node in graph.vertices()) {
-                val swinging = sqrt((node.dxOld - node.dx).pow(2) + (node.dyOld - node.dy).pow(2))
+                val swinging = sqrt((dxOld[node]!! - dx[node]!!).pow(2) + (dyOld[node]!! - dy[node]!!).pow(2))
                 totalSwinging += node.vertex.mass * swinging
-                totalEffectiveTraction += node.vertex.mass * 0.5 * sqrt((node.dxOld + node.dx).pow(2) + (node.dyOld + node.dy).pow(2))
+                totalEffectiveTraction += node.vertex.mass * 0.5 * sqrt((dxOld[node]!! + dx[node]!!).pow(2) + (dyOld[node]!! + dy[node]!!).pow(2))
             }
             val estimatedOptimalJitterTolerance = 0.05 * sqrt(graph.vertices().size.toDouble())
             val minJT = sqrt(estimatedOptimalJitterTolerance)
@@ -77,15 +83,15 @@ class Layout: Controller() {
             globalSpeed += min(targetSpeed - globalSpeed, maxRise * globalSpeed)
             for (node in graph.vertices()) {
                 val swinging =
-                    node.vertex.mass * sqrt((node.dxOld - node.dx).pow(2) + (node.dyOld - node.dy).pow(2))
+                    node.vertex.mass * sqrt((dxOld[node]!! - dx[node]!!).pow(2) + (dyOld[node]!! - dy[node]!!).pow(2))
                 var factor = 0.1 * globalSpeed / (1.0 + sqrt(globalSpeed * swinging))
-                val df = sqrt(node.dx.pow(2) + node.dy.pow(2))
+                val df = sqrt(dx[node]!!.pow(2) + dy[node]!!.pow(2))
                 factor = min(factor * df, 10.0) / df
-                node.position = node.centerX + node.dx * factor to node.centerY + node.dy * factor
-                node.dxOld = node.dx
-                node.dyOld = node.dy
-                node.dx = 0.0
-                node.dy = 0.0
+                node.position = node.centerX + dx[node]!! * factor to node.centerY + dy[node]!! * factor
+                dxOld[node] = dx[node]!!
+                dyOld[node] = dy[node]!!
+                dx[node] = 0.0
+                dy[node] = 0.0
             }
         }
     }
@@ -167,8 +173,13 @@ class Layout: Controller() {
 
     fun applyForceAtlas2(graph: GraphView): Anim {
 
-        val kek = Anim(graph)
-        return kek
+        graph.vertices().forEach {
+            dx[it] = 0.0
+            dy[it] = 0.0
+            dxOld[it] = 0.0
+            dyOld[it] = 0.0
+        }
+        return Anim(graph)
     }
 
     private fun computeDistance(v: VertexView, u: VertexView) = sqrt((v.centerX - u.centerX).pow(2) + (v.centerY - u.centerY).pow(2))
@@ -185,11 +196,11 @@ class Layout: Controller() {
             if (dist > 0) {
                 val factor = -e / v.vertex.mass
 
-                v.dx += xDist * factor
-                v.dy += yDist * factor
+                dx[v] = dx[v]!! + xDist * factor
+                dy[v] = dy[v]!! + yDist * factor
 
-                u.dx -= xDist * factor
-                u.dy -= yDist * factor
+                dx[u] = dx[u]!! - xDist * factor
+                dy[u] = dy[u]!! - yDist * factor
             }
         }
     }
@@ -201,24 +212,14 @@ class Layout: Controller() {
             val xDist = v.centerX - u.centerX
             val yDist = v.centerY - u.centerY
             val dist = computeDistance(v, u) - v.radius - u.radius
+            
+            val factor = if (dist > 0) scaling * v.vertex.mass * u.vertex.mass / dist.pow(2)
+            else antiCollisionCoeff * v.vertex.mass * u.vertex.mass
+            dx[v] = dx[v]!! + xDist * factor
+            dy[v] = dy[v]!! + yDist * factor
 
-            if (dist > 0) {
-                val factor = scaling * v.vertex.mass * u.vertex.mass / dist.pow(2)
-
-                v.dx += xDist * factor
-                v.dy += yDist * factor
-
-                u.dx -= xDist * factor
-                u.dy -= yDist * factor
-            } else if (dist < 0) {
-                val factor = antiCollisionCoeff * v.vertex.mass * u.vertex.mass
-
-                v.dx += xDist * factor
-                v.dy += yDist * factor
-
-                u.dx -= xDist * factor
-                u.dy -= yDist * factor
-            }
+            dx[u] = dx[u]!! - xDist * factor
+            dy[u] = dy[u]!! - yDist * factor
         }
     }
 
@@ -246,12 +247,12 @@ class Layout: Controller() {
         val dist = sqrt(xDist.pow(2) + yDist.pow(2))
         if (dist > 0) {
             val factor = scaling * node.vertex.mass * region.mass / dist.pow(2)
-            node.dx += xDist * factor
-            node.dy += yDist * factor
+            dx[node] = dx[node]!! - xDist * factor
+            dy[node] = dy[node]!! - yDist * factor
         } else if (dist < 0) {
             val factor = -antiCollisionCoeff * node.vertex.mass * region.mass / dist
-            node.dx += xDist * factor
-            node.dy += yDist * factor
+            dx[node] = dx[node]!! - xDist * factor
+            dy[node] = dy[node]!! - yDist * factor
         }
     }
 
@@ -264,8 +265,8 @@ class Layout: Controller() {
             val dist = sqrt(xDist.pow(2) + yDist.pow(2)) - v.radius
             if (dist > 0) {
                 val factor = v.vertex.mass * gravity
-                v.dx -= xDist * factor
-                v.dy -= yDist * factor
+                dx[v] = dx[v]!! -  xDist * factor
+                dy[v] = dy[v]!! -  yDist * factor
             }
         }
     }
