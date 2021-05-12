@@ -26,7 +26,7 @@ class MainView : View("Graph Application") {
     private val centrality = Centrality()
 
     //var constant: TextField by singleAssign()
-    private val layout = Layout().applyForceAtlas2(graphView)
+    private val layout by lazy { Layout().applyForceAtlas2(graphView) }
 
     override val root = borderpane {
         this.stylesheets.add("1.css")
