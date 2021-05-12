@@ -21,7 +21,7 @@ private lateinit var leiden: Leiden
 class MainView : View("Graph Application") {
 
     private var graph = Graph()
-    private val graphView by lazy { GraphView(graph) }
+    private var graphView = GraphView(graph)
     private val layout1 = Layout()
     private val centrality = Centrality()
 
@@ -110,6 +110,7 @@ class MainView : View("Graph Application") {
                             val file = fileChooser.showOpenDialog(window)
                             file?.let {
                                 graph = FileLoader().loadGraph(file.path)
+                                graphView = GraphView(graph)
                             }
                         }
                     }
