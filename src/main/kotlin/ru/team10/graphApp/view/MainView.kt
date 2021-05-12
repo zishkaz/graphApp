@@ -153,7 +153,7 @@ class MainView : View("Graph Application") {
                             action {
                                 runAsync {
                                     graphFilename?.let {
-                                        leiden = Leiden(graph, it, "src/output.txt")
+                                        leiden = Leiden(it, "src/output.txt")
                                         leiden.startLeiden(0.2)
                                     }
                                 }
