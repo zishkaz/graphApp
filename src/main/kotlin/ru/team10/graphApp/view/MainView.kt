@@ -8,17 +8,22 @@ import ru.team10.graphApp.controller.Layout
 import tornadofx.*
 import javafx.scene.input.KeyCode
 import ru.team10.graphApp.controller.Centrality
+import ru.team10.graphApp.communityDetection.Leiden
+import ru.team10.graphApp.model.Graph
 
 var constant1: String = "123"
+private var graphFilename: String? = "src/input.txt"
+private lateinit var leiden: Leiden
 
 class MainView : View("Graph Application") {
 
-    private val graph = GraphView(props.sample)
+    private val graphView = GraphView(props.sample)
+    private val graph = Graph()
     private val layout1 = Layout()
     private val centr = Centrality()
 
     //var constant: TextField by singleAssign()
-    private val layout = Layout().applyForceAtlas2(graph)
+    private val layout = Layout().applyForceAtlas2(graphView)
 
     override val root = borderpane {
         this.getStylesheets().add("1.css")
@@ -27,7 +32,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.start()
-                centr.harmonic(props.sample, graph.vertices())
+                centr.harmonic(props.sample, graphView.vertices())
             }
         }
 
@@ -36,13 +41,13 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.stop()
-                centr.harmonic(props.sample, graph.vertices())
+                centr.harmonic(props.sample, graphView.vertices())
             }
         }
 
         center {
 
-            add(graph)
+            add(graphView)
         }
         left= vbox(10) {
 
@@ -144,8 +149,16 @@ class MainView : View("Graph Application") {
                 }
                 fold("Some other editor") {
                     stackpane {
-                        label("Nothing here")
-
+                        button("Start Leiden algorithm") {
+                            action {
+                                runAsync {
+                                    graphFilename?.let {
+                                        leiden = Leiden(graph, it, "src/output.txt")
+                                        leiden.startLeiden(0.2)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -161,8 +174,8 @@ class MainView : View("Graph Application") {
 
     init {
         currentStage?.apply {
-            layout1.randomLayout(width, height, graph)
-            centr.harmonic(props.sample, graph.vertices())
+            layout1.randomLayout(width, height, graphView)
+            centr.harmonic(props.sample, graphView.vertices())
         }
     }
 

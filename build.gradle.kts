@@ -9,6 +9,7 @@ plugins {
 
 repositories {
     jcenter()
+    maven{url = uri("https://jitpack.io" )}
 }
 
 sourceSets.main {
@@ -24,6 +25,7 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("com.github.CWTSLeiden:networkanalysis:1.1.0")
     implementation("no.tornado:tornadofx:1.7.20") {
         exclude("org.jetbrains.kotlin")
     }
