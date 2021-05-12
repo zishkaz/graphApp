@@ -7,6 +7,8 @@ import javafx.scene.text.Font
 import ru.team10.graphApp.controller.algorithms.Layout
 import tornadofx.*
 import javafx.scene.input.KeyCode
+import javafx.stage.FileChooser
+import javafx.stage.Popup
 import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
@@ -35,7 +37,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.start()
-//                centr.harmonic(props.sample, graphView.vertices())
+//                centr.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -44,7 +46,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.stop()
-//                centr.harmonic(props.sample, graphView.vertices())
+//                centr.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -55,11 +57,11 @@ class MainView : View("Graph Application") {
         left= vbox(10) {
 
             textflow {
-                text("BIG") {
+                text("LITTLE") {
                     fill = Color.PURPLE
                     font = Font(20.0)
                 }
-                text("Dick") {
+                text("Big") {
                     fill = Color.ORANGE
                     font = Font(28.0)
                 }
@@ -99,6 +101,21 @@ class MainView : View("Graph Application") {
 
         right {
             accordion {
+                fold("GRAPH"){
+                    button("Import"){
+                        action{
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter = FileChooser.ExtensionFilter("Graph file", "*.json")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Open Resource File"
+                            val file = fileChooser.showOpenDialog(window)
+                            if (file != null){
+                                //
+                            }
+                        }
+                    }
+                }
                 fold("Раскладка") {
                     checkbox("Atlas on/off") {
                         action {
@@ -178,7 +195,7 @@ class MainView : View("Graph Application") {
     init {
         currentStage?.apply {
             layout1.randomLayout(width, height, graphView)
-//            centr.harmonic(props.sample, graphView.vertices())
+           // centr.applyHarmonicCentrality(props.sample, graphView.vertices())
         }
     }
 
