@@ -4,14 +4,13 @@ import javafx.collections.FXCollections
 import javafx.scene.control.TextField
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import ru.team10.graphApp.controller.Layout
+import ru.team10.graphApp.controller.algorithms.Layout
 import tornadofx.*
 import javafx.scene.input.KeyCode
-import ru.team10.graphApp.controller.Centrality
-import ru.team10.graphApp.controller.Leiden
-import ru.team10.graphApp.loader.FileLoader
-import ru.team10.graphApp.loader.GraphLoader
-import ru.team10.graphApp.model.Graph
+import ru.team10.graphApp.controller.algorithms.Centrality
+import ru.team10.graphApp.controller.algorithms.Leiden
+import ru.team10.graphApp.controller.loader.FileLoader
+import ru.team10.graphApp.controller.loader.GraphLoader
 import java.nio.file.FileSystems
 
 var constant1: String = "123"

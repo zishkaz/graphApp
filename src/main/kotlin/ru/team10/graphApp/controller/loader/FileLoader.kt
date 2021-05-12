@@ -1,19 +1,18 @@
-package ru.team10.graphApp.loader
+package ru.team10.graphApp.controller.loader
 
 import javafx.scene.paint.Color
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.VertexView
+import tornadofx.Controller
 import tornadofx.getDouble
 import tornadofx.loadJsonObject
 import kotlin.io.path.Path
 import kotlin.random.Random
 
 
-class FileLoader: GraphLoader {
+class FileLoader: GraphLoader, Controller() {
 
     override fun loadGraph(data: String): Graph {
 

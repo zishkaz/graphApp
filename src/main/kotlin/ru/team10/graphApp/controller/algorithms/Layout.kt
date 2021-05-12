@@ -1,4 +1,4 @@
-package ru.team10.graphApp.controller
+package ru.team10.graphApp.controller.algorithms
 
 import javafx.animation.AnimationTimer
 import javafx.geometry.Point2D

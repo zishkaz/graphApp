@@ -1,6 +1,7 @@
-package ru.team10.graphApp.loader
+package ru.team10.graphApp.controller.loader
 
 import ru.team10.graphApp.model.Graph
+import tornadofx.Controller
 
 interface GraphLoader {
 

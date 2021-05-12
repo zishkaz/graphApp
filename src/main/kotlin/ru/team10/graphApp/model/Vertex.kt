@@ -1,8 +1,5 @@
 package ru.team10.graphApp.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Vertex(val id: String, var communityID: Int = -1, var centralityRang: Double = -1.0): Comparable<Vertex> {
     var dist: Int = Int.MAX_VALUE
     var mass = 1

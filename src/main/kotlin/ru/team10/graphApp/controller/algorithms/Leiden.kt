@@ -1,4 +1,4 @@
-package ru.team10.graphApp.controller
+package ru.team10.graphApp.controller.algorithms
 
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex

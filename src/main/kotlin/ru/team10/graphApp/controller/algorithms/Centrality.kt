@@ -1,4 +1,4 @@
-package ru.team10.graphApp.controller
+package ru.team10.graphApp.controller.algorithms
 
 import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
