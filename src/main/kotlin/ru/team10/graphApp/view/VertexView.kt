@@ -9,8 +9,8 @@ var radius = 4.0
 
 class VertexView(
     val vertex: Vertex,
-    x: Double,
-    y: Double,
+    x: Double = 0.0,
+    y: Double = 0.0,
     color: Color,
 ) : Circle(x, y, radius, color) {
 

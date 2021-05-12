@@ -29,9 +29,6 @@ dependencies {
     implementation("no.tornado:tornadofx:1.7.20") {
         exclude("org.jetbrains.kotlin")
     }
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC") {
-        exclude("org.jetbrains.kotlin")
-    }
 }
 
 val compileKotlin: KotlinCompile by tasks

@@ -2,17 +2,14 @@ package ru.team10.graphApp.controller.algorithms
 
 import javafx.animation.AnimationTimer
 import javafx.geometry.Point2D
-import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.EdgeView
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
-import ru.team10.graphApp.view.radius
 import tornadofx.Controller
 import java.lang.Double.max
 import java.lang.Double.min
 import kotlin.math.pow
 import kotlin.math.sqrt
-import kotlin.random.Random
 
 private const val antiCollisionCoeff = 100.0
 internal var scaling = 1000.0
@@ -30,14 +27,6 @@ class Layout: Controller() {
     private val dy = hashMapOf<VertexView, Double>()
     private val dxOld = hashMapOf<VertexView, Double>()
     private val dyOld = hashMapOf<VertexView, Double>()
-
-    fun randomLayout(width: Double, height: Double, graph: GraphView) {
-        for (v in graph.vertices()) {
-            val randomX = Random.nextDouble(3 * radius, width - 3 * radius)
-            val randomY = Random.nextDouble(3 * radius, height - 3 * radius)
-            v.position = randomX to randomY
-        }
-    }
 
     inner class Anim(private val graph: GraphView): AnimationTimer() {
 

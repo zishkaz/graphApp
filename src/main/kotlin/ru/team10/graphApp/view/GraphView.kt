@@ -5,11 +5,12 @@ import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Graph
 import tornadofx.add
 
-class GraphView(graph: Graph): Pane() {
+class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()): Pane() {
 
     private val vertices by lazy {
 
-        graph.vertices().associateWith { VertexView(it, 0.0, 0.0, Color.AQUA) }
+        if (verticesView.isEmpty()) graph.vertices().associateWith { VertexView(it, 0.0, 0.0, Color.AQUA) }
+        else verticesView.associateBy { it.vertex }
     }
 
     private val edges by lazy {

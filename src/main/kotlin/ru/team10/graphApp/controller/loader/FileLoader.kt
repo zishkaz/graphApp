@@ -4,6 +4,7 @@ import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
+import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 import tornadofx.getDouble
@@ -14,7 +15,7 @@ import kotlin.random.Random
 
 class FileLoader: GraphLoader, Controller() {
 
-    override fun loadGraph(data: String): Graph {
+    override fun loadGraph(data: String): GraphView {
 
         val json = loadJsonObject(Path(data))
         val vertices = json.getJsonArray("vertices")?.map {
@@ -25,6 +26,7 @@ class FileLoader: GraphLoader, Controller() {
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(-2000.0, 2000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(-2000.0, 2000.0)
             val vertex = Vertex(id, centralityRang.toDouble(), communityID)
+            println("$posX $posY")
             VertexView(vertex, posX, posY, Color.AQUA)
         } ?: throw NoSuchFieldException("Empty graph can't be loaded!")
         val edges = json.getJsonArray("edges")?.map {
@@ -37,7 +39,7 @@ class FileLoader: GraphLoader, Controller() {
         val graph = Graph()
         vertices.forEach { graph.addVertex(it.vertex) }
         edges?.forEach { graph.addEdge(it) }
-        return graph
+        return GraphView(graph, vertices)
     }
 
     override fun saveGraph(graph: Graph) {

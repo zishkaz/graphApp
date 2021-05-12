@@ -20,9 +20,7 @@ private lateinit var leiden: Leiden
 
 class MainView : View("Graph Application") {
 
-    private var graph = Graph()
-    private var graphView = GraphView(graph)
-    private val layout1 = Layout()
+    private var graphView = GraphView(Graph())
     private val centrality = Centrality()
 
     //var constant: TextField by singleAssign()
@@ -48,10 +46,10 @@ class MainView : View("Graph Application") {
             }
         }
 
-        center {
-
-            add(graphView)
-        }
+//        center {
+//
+//            add(graphView)
+//        }
         left= vbox(10) {
 
             textflow {
@@ -109,8 +107,11 @@ class MainView : View("Graph Application") {
                             fileChooser.title = "Open Resource File"
                             val file = fileChooser.showOpenDialog(window)
                             file?.let {
-                                graph = FileLoader().loadGraph(file.path)
-                                graphView = GraphView(graph)
+                                graphView = FileLoader().loadGraph(file.path)
+                                center {
+
+                                    add(graphView)
+                                }
                             }
                         }
                     }
@@ -190,14 +191,6 @@ class MainView : View("Graph Application") {
 
 
     }
-
-    init {
-        currentStage?.apply {
-            layout1.randomLayout(width, height, graphView)
-           // centr.applyHarmonicCentrality(props.sample, graphView.vertices())
-        }
-    }
-
 }
 
 
