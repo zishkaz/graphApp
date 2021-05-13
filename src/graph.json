@@ -22,7 +22,7 @@
   "edges" : [
 
     {
-      "first" : -1,
+      "first" : 0,
       "second" : 1,
       "weight" : 2.5
     },
