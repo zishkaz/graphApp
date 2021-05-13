@@ -10,15 +10,16 @@ import java.util.*
 
 class Centrality : Controller() {
 
-    private data class ExtraVertexData(val vert: String) {
+    private data class ExtraVertexData(val vert: Vertex) {
         var previous: Vertex? = null
-        var neighbours: MutableList<Vertex> = mutableListOf()
+        var neighbours = HashMap<Vertex, Double>()
+
     }
 
-    private fun setNeighbours(edges: List<Edge>, dopVert: HashMap<String, ExtraVertexData>) {
+    private fun setNeighbours(edges: List<Edge>, verticesExtraData: HashMap<Vertex, ExtraVertexData>) {
         for (i in edges.indices) {
-            dopVert[edges[i].first.id]!!.neighbours.add(edges[i].second)
-            dopVert[edges[i].second.id]!!.neighbours.add(edges[i].first)
+            verticesExtraData[edges[i].first]!!.neighbours[edges[i].second] = edges[i].weight
+            verticesExtraData[edges[i].second]!!.neighbours[edges[i].first] = edges[i].weight
         }
     }
 
@@ -26,9 +27,9 @@ class Centrality : Controller() {
 
         val edges = graph.edges().toList()
         val vert = graph.vertices().toList()
-        val verticesExtraData = hashMapOf<String, ExtraVertexData>()
+        val verticesExtraData = hashMapOf<Vertex, ExtraVertexData>()
         for (i in vert) {
-            verticesExtraData[i.id] = ExtraVertexData(i.id)
+            verticesExtraData[i] = ExtraVertexData(i)
         }
 
         setNeighbours(edges, verticesExtraData)
@@ -48,13 +49,13 @@ class Centrality : Controller() {
         println("nice")
     }
 
-    private fun setUpVertices(start: Vertex, vert: List<Vertex>, verticesExtraData: HashMap<String, ExtraVertexData>): Double {
+    private fun setUpVertices(start: Vertex, vert: List<Vertex>, verticesExtraData: HashMap<Vertex, ExtraVertexData>): Double {
 
         val q = TreeSet<Vertex>()
 
         for (i in vert.indices) {
-            verticesExtraData[vert[i].id]!!.previous = if (vert[i] == start) start else null
-            vert[i].shortestDist = if (vert[i] == start) 0 else Int.MAX_VALUE
+            verticesExtraData[vert[i]]!!.previous = if (vert[i] == start) start else null
+            vert[i].shortestDist = if (vert[i] == start) 0.0 else Double.MAX_VALUE
             q.add(vert[i])
         }
 
@@ -62,25 +63,26 @@ class Centrality : Controller() {
     }
 
 
-    private fun runDijkstra(q: TreeSet<Vertex>, verticesExtraData: HashMap<String, ExtraVertexData>): Double {
+    private fun runDijkstra(q: TreeSet<Vertex>, verticesExtraData: HashMap<Vertex, ExtraVertexData>): Double {
 
-        var sumOfShortesPaths = 0.0
+        var sumOfShortestPaths = 0.0
         while (!q.isEmpty()) {
             val u = q.pollFirst()
-            if (u.shortestDist == Int.MAX_VALUE) break
-            for (a in verticesExtraData[u.id]!!.neighbours) {
-                val alternateDist = u.shortestDist + 1
-                if (alternateDist < a.shortestDist) {
-                    q.remove(a)
-                    a.shortestDist = alternateDist
-                    sumOfShortesPaths += 1.0 / alternateDist
-                    verticesExtraData[a.id]!!.previous = u
-                    q.add(a)
+            if (u!!.shortestDist == Double.MAX_VALUE) break
+            for (a in verticesExtraData[u]!!.neighbours) {
+                val v = a.key
+                val alternateDist = u.shortestDist + a.value
+                if (alternateDist < v.shortestDist) {
+                    q.remove(v)
+                    v.shortestDist = alternateDist
+                    sumOfShortestPaths += 1.0 / alternateDist
+                    verticesExtraData[v]!!.previous = u
+                    q.add(v)
                 }
             }
         }
 
-        return sumOfShortesPaths
+        return sumOfShortestPaths
     }
 
     private fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {

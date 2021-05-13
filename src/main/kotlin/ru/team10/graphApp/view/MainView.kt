@@ -1,9 +1,6 @@
 package ru.team10.graphApp.view
 
-import javafx.beans.value.ObservableObjectValue
-import javafx.beans.value.ObservableValue
-import javafx.collections.FXCollections
-import javafx.scene.control.TextField
+import javafx.scene.control.Alert
 import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -11,12 +8,14 @@ import javafx.stage.FileChooser
 import javafx.stage.Popup
 import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.algorithms.Layout
+import ru.team10.graphApp.controller.algorithms.scaling
+import ru.team10.graphApp.controller.algorithms.gravity
+import ru.team10.graphApp.controller.algorithms.isBarnesHutActive
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.model.Graph
 import tornadofx.*
 
-var constant1: String = "123"
 private var graphFilename: String? = "src/input.txt"
 private lateinit var leiden: Leiden
 
@@ -25,7 +24,6 @@ class MainView : View("Graph Application") {
     private var graphView = GraphView(Graph())
     private val centrality = Centrality()
     private var layout = Layout().applyForceAtlas2(graphView)
-    //var constant: TextField by singleAssign()
 
     override val root = borderpane {
         this.stylesheets.add("1.css")
@@ -34,7 +32,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.start()
-//                centr.applyHarmonicCentrality(props.sample, graphView.vertices())
+//                centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -43,166 +41,137 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.stop()
-//                centr.applyHarmonicCentrality(props.sample, graphView.vertices())
+//                centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
         center {
             add(graphView)
         }
-        left= vbox(10) {
+        top = vbox(10) {
 
             textflow {
-                text("LITTLE") {
+                text("GRAPH") {
                     fill = Color.PURPLE
                     font = Font(20.0)
                 }
-                text("Big") {
+                text("App") {
                     fill = Color.ORANGE
                     font = Font(28.0)
                 }
             }
-
-            button("Reset default settings") {
-                this.styleClass.add("button1")
-                action {
-
-                }
-            }
-            button("раскадка") {
-                action {
-                    new1().openWindow()
-                }
-            }
-            this.add(new1())
-            button("сообщества") {
-                action {
-                    new2().openWindow()
-                }
-            }
-            button("централити") {
-                style = ("-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 5;")
-                action {
-                    new3().openWindow()
-                }
-            }
-            val texasCities = FXCollections.observableArrayList(
-                "Austin",
-                "Dallas", "Midland", "San Antonio", "Fort Worth"
-            )
-
-            combobox(values = texasCities)
         }
 
-
-        right {
-            accordion {
-                fold("GRAPH"){
-                    button("Import"){
-                        action{
-                            val window = Popup()
-                            val fileChooser = FileChooser()
-                            val importFilter = FileChooser.ExtensionFilter("Graph file", "*.json")
-                            fileChooser.extensionFilters.add(importFilter)
-                            fileChooser.title = "Open Resource File"
-                            val file = fileChooser.showOpenDialog(window)
-                            file?.let {
-                                graphView = FileLoader().loadGraph(file.path)
-                                center.getChildList()!!.clear()
-                                center.add(graphView)
-                                layout = Layout().applyForceAtlas2(graphView)
-                            }
+        left = vbox {
+            titledpane("GRAPH") {
+                button("Import") {
+                    action {
+                        val window = Popup()
+                        val fileChooser = FileChooser()
+                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+                        fileChooser.extensionFilters.add(importFilter)
+                        fileChooser.title = "Open Resource File"
+                        val file = fileChooser.showOpenDialog(window)
+                        file?.let {
+                            graphView = FileLoader().loadGraph(file.path)
+                            center.getChildList()!!.clear()
+                            center.add(graphView)
+                            layout = Layout().applyForceAtlas2(graphView)
                         }
                     }
                 }
-                fold("Раскладка") {
-                    checkbox("Atlas on/off") {
-                        action {
-                            if (isSelected) {
-                                runAsync {
-                                    apply()
-                                }
-                            }
+
+                button("Export") {
+                    action {
+                        val window = Popup()
+                        val fileChooser = FileChooser()
+                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+                        fileChooser.extensionFilters.add(importFilter)
+                        fileChooser.title = "Save Graph"
+                        val file = fileChooser.showSaveDialog(window)
+                        file?.let {
+                            FileLoader().saveGraph(graphView, file.path)
                         }
                     }
-                    val kek = togglebutton("START") {
-                        style = "-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 5;}"
-                        this.isSelected = false
+                }
+            }
+            titledpane("LAYOUT") {
+                val kek = togglebutton("START") {
+                    this.isSelected = false
 
-                        action {
-                            text = if (isSelected) {
-                                runAsync {
-                                    apply()
-                                }
-                                "STOP"
+                    action {
+                        text = if (isSelected) {
+                            runAsync {
+                                apply()
+                            }
+                            "STOP"
+                        } else {
+                            runAsync {
+                                applyStop()
+                            }
+                            "START"
+                        }
+                    }
+                }
+                label("Scaling")
+                textfield {
+                    this.promptText = "Input"
+                    filterInput { it.controlNewText.isDouble() }
+                    this.setOnKeyReleased { event ->
+                        if (event.code == KeyCode.ENTER) {
+                            if (this.text == null || this.text.trim().isBlank()) {
+                                alert(Alert.AlertType.WARNING, "Please, input Scaling constant !")
+                            } else if (this.text.toDouble() <= 0.0) {
+                                alert(Alert.AlertType.WARNING, "Scaling constant must be positive !")
                             } else {
-                                runAsync {
-                                    applyStop()
-                                }
-                                "START"
+                                scaling = this.text.toDouble()
+                                println("scal $scaling")
+                                this.parent.requestFocus()
                             }
                         }
                     }
-                    val r = button()
-                    r.text = "a = $constant1"
-                    r.style = "-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 5;"
-                    r.setOnMouseReleased {
-                        r.isDisable = true
-                        hbox {
-                            //label("Constant")
-                            //constant = textfield()
-                            val filterTextField: TextField = textfield()
-                            filterTextField.fitToSize(r)
-                            filterTextField.setOnKeyReleased { event ->
-                                if (event.code == KeyCode.ENTER) {
-                                    println("Logging in as ${filterTextField.text} ")
-                                    constant1 = filterTextField.text
-                                    r.text = "a = $constant1"
-                                    hide()
-                                    r.isDisable = false
-                                }
-                            }
-                        }
-                    }
-
                 }
-                fold("Some other editor") {
-                    stackpane {
-                        button("Start Leiden algorithm") {
-                            action {
-                                runAsync {
-                                    graphFilename?.let {
-                                        leiden = Leiden(it, "src/output.txt")
-                                        leiden.startLeiden(0.2)
-                                    }
+
+                label("Gravity")
+                textfield {
+                    this.promptText = "Input"
+                    filterInput { it.controlNewText.isDouble() }
+                    this.setOnKeyReleased { event ->
+                        if (event.code == KeyCode.ENTER) {
+                            if (this.text == null || this.text.trim().isBlank()) {
+                                alert(Alert.AlertType.WARNING, "Please, input Gravity constant !")
+                            } else if (this.text.toDouble() < 0.0) {
+                                alert(Alert.AlertType.WARNING, "Gravity constant must be not negative !")
+                            } else {
+                                gravity = this.text.toDouble()
+                                println("grav: $gravity")
+                                this.parent.requestFocus()
+                            }
+                        }
+                    }
+                }
+
+                checkbox("BarnesHut optimisation") {
+                    action {
+                        isBarnesHutActive = isSelected
+                        println(isBarnesHutActive)
+                    }
+                }
+            }
+            titledpane("Some other editor") {
+                stackpane {
+                    button("Start Leiden algorithm") {
+                        action {
+                            runAsync {
+                                graphFilename?.let {
+                                    leiden = Leiden(it, "src/output.txt")
+                                    leiden.startLeiden(0.2)
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-
-        style {
-            backgroundColor += Color.AZURE
-            //backgroundColor+=LinearGradient(0.0, 0.0, 50.0, 50.0, false, CycleMethod.REPEAT, Stop(0.0, c(137, 163, 147)), Stop(1.0, c(255, 163, 147)))
-        }
-
-
-    }
-}
-
-
-class new1 : View("ddd") {
-    override val root = borderpane {
-        left = vbox(10) {
-
-            button("ппппппппп") {
-                action {
-
-                }
-            }
-
         }
 
         style {
@@ -211,39 +180,9 @@ class new1 : View("ddd") {
     }
 }
 
-class new2 : View("ddd") {
-    override val root = borderpane {
-        left = vbox(10) {
+class ErrorWindow(text: String) : View() {
+    override val root = stackpane {
 
-            button("ппппппппп") {
-                action {
-
-                }
-            }
-
-        }
-
-        style {
-            backgroundColor += Color.AZURE
-        }
-    }
-}
-
-class new3 : View("ddd") {
-    override val root = borderpane {
-        left = vbox(10) {
-
-            button("пппппппппппп") {
-                action {
-
-                }
-            }
-
-        }
-
-        style {
-            backgroundColor += Color.AZURE
-
-        }
+        label(text)
     }
 }

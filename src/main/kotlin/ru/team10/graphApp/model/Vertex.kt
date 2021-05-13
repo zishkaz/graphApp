@@ -2,7 +2,7 @@ package ru.team10.graphApp.model
 
 data class Vertex(val id: String, var centralityRang: Double, var communityID: Int): Comparable<Vertex> {
 
-    var shortestDist: Int = Int.MAX_VALUE
+    var shortestDist: Double = Double.MAX_VALUE
     var mass = 1
 
     override fun compareTo(other: Vertex): Int {

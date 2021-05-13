@@ -19,7 +19,7 @@ private const val minSpeedEfficiency = 0.05
 private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
 private const val barnesHutTheta = 1.2
-private var isBarnesHutActive = false
+var isBarnesHutActive = false
 
 class Layout: Controller() {
 
