@@ -65,8 +65,10 @@ class MainView : View("Graph Application") {
 
         left = vbox {
             titledpane("GRAPH") {
-                button("Import") {
-                    action {
+                borderpane {
+                    left {
+                        button("Import") {
+                            action {
 //                        val window = Popup()
 //                        val fileChooser = FileChooser()
 //                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
@@ -81,17 +83,19 @@ class MainView : View("Graph Application") {
 //                                layout = Layout().applyForceAtlas2(graphView)
 //                            }
 //                        }
-                        SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
-                            graphView = it
-                            center.getChildList()!!.clear()
-                            center.add(graphView)
-                            layout = Layout().applyForceAtlas2(graphView)
+                                SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
+                                    graphView = it
+                                    center.getChildList()!!.clear()
+                                    center.add(graphView)
+                                    layout = Layout().applyForceAtlas2(graphView)
+                                }
+                            }
                         }
                     }
-                }
 
-                button("Export") {
-                    action {
+                    right {
+                        button("Export") {
+                            action {
 //                        val window = Popup()
 //                        val fileChooser = FileChooser()
 //                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
@@ -101,12 +105,29 @@ class MainView : View("Graph Application") {
 //                        file?.let {
 //                            FileLoader().saveGraph(graphView, file.path)
 //                        }
-                        SQLiteLoader().saveGraph(graphView, "saved.sqlite")
+                                SQLiteLoader().saveGraph(graphView, "saved.sqlite")
+                            }
+                        }
+                    }
+
+                    bottom {
+                        togglebutton("Hide edges") {
+                            isSelected = false
+                            action {
+                                text = if (isSelected) {
+                                    for (edge in graphView.edges()) edge.hide()
+                                    "Show edges"
+                                } else {
+                                    for (edge in graphView.edges()) edge.show()
+                                    "Hide edges"
+                                }
+                            }
+                        }
                     }
                 }
             }
             titledpane("LAYOUT") {
-                val kek = togglebutton("START") {
+                togglebutton("START") {
                     this.isSelected = false
 
                     action {
