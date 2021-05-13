@@ -1,9 +1,12 @@
 package ru.team10.graphApp.view
 
+import javafx.beans.InvalidationListener
+import javafx.beans.Observable
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Graph
 import tornadofx.add
+import java.util.*
 
 class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()): Pane() {
 

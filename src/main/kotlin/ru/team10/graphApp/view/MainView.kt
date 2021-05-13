@@ -1,5 +1,7 @@
 package ru.team10.graphApp.view
 
+import javafx.beans.value.ObservableObjectValue
+import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
@@ -22,9 +24,8 @@ class MainView : View("Graph Application") {
 
     private var graphView = GraphView(Graph())
     private val centrality = Centrality()
-
+    private var layout = Layout().applyForceAtlas2(graphView)
     //var constant: TextField by singleAssign()
-    private val layout by lazy { Layout().applyForceAtlas2(graphView) }
 
     override val root = borderpane {
         this.stylesheets.add("1.css")
@@ -46,10 +47,9 @@ class MainView : View("Graph Application") {
             }
         }
 
-//        center {
-//
-//            add(graphView)
-//        }
+        center {
+            add(graphView)
+        }
         left= vbox(10) {
 
             textflow {
@@ -108,10 +108,9 @@ class MainView : View("Graph Application") {
                             val file = fileChooser.showOpenDialog(window)
                             file?.let {
                                 graphView = FileLoader().loadGraph(file.path)
-                                center {
-
-                                    add(graphView)
-                                }
+                                center.getChildList()!!.clear()
+                                center.add(graphView)
+                                layout = Layout().applyForceAtlas2(graphView)
                             }
                         }
                     }
@@ -126,21 +125,21 @@ class MainView : View("Graph Application") {
                             }
                         }
                     }
-                    togglebutton("START") {
+                    val kek = togglebutton("START") {
                         style = "-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 5;}"
                         this.isSelected = false
 
                         action {
-                            if (isSelected) {
+                            text = if (isSelected) {
                                 runAsync {
                                     apply()
                                 }
-                                text = "STOP"
+                                "STOP"
                             } else {
                                 runAsync {
                                     applyStop()
                                 }
-                                text = "START"
+                                "START"
                             }
                         }
                     }
