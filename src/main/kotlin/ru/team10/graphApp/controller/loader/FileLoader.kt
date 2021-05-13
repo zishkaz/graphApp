@@ -22,23 +22,26 @@ class FileLoader: GraphLoader, Controller() {
             val jsonObject = it.asJsonObject()
             val id = if (jsonObject.containsKey("id")) jsonObject.getString("id") else throw NoSuchFieldException("Missed id for a vertex!")
             val communityID = if (jsonObject.containsKey("communityID")) jsonObject.getInt("communityID") else -1
-            val centralityRang = if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1
-            val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(-2000.0, 2000.0)
-            val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(-2000.0, 2000.0)
-            val vertex = Vertex(id, centralityRang.toDouble(), communityID)
+            val centralityRang = if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1.0
+            val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(1000.0)
+            val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(1000.0)
+            val vertex = Vertex(id, centralityRang, communityID)
             VertexView(vertex, posX, posY, Color.AQUA)
         } ?: throw NoSuchFieldException("Empty graph can't be loaded!")
         val edges = json.getJsonArray("edges")?.map {
             val jsonObject = it.asJsonObject()
             val first = jsonObject.getInt("first")
+            if (first < 0 || first >= vertices.size) throw IllegalArgumentException("Wrong vertex number!")
             val second = jsonObject.getInt("second")
+            if (second >= vertices.size || second < 0) throw IllegalArgumentException("Wrong vertex number!")
             val weight = if (jsonObject.containsKey("weight")) jsonObject.getDouble("weight") else 1.0
             Edge(vertices[first].vertex, vertices[second].vertex, weight)
         }
         val graph = Graph()
         vertices.forEach { graph.addVertex(it.vertex) }
         edges?.forEach { graph.addEdge(it) }
-        return GraphView(graph, vertices)
+        val graphView = GraphView(graph, vertices)
+        if (validateGraph(graphView)) return graphView else throw IllegalStateException("An error occurred while opening a graph!")
     }
 
     override fun saveGraph(graph: Graph) {
