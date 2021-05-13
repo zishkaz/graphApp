@@ -15,16 +15,18 @@ import kotlin.io.path.Path
 import kotlin.random.Random
 
 
-class FileLoader: GraphLoader, Controller() {
+class FileLoader : GraphLoader, Controller() {
 
-    override fun loadGraph(data: String): GraphView {
+    override fun loadGraph(data: String): GraphView? {
 
         val json = loadJsonObject(Path(data))
         val vertices = json.getJsonArray("vertices")?.map {
             val jsonObject = it.asJsonObject()
-            val id = if (jsonObject.containsKey("id")) jsonObject.getString("id") else throw NoSuchFieldException("Missed id for a vertex!") //@pionep change it to error
+            val id =
+                if (jsonObject.containsKey("id")) jsonObject.getString("id") else return null //@pionep change it to error
             val communityID = if (jsonObject.containsKey("communityID")) jsonObject.getInt("communityID") else -1
-            val centralityRang = if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1.0
+            val centralityRang =
+                if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1.0
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(1000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(1000.0)
             val vertex = Vertex(id, centralityRang, communityID)
@@ -33,9 +35,9 @@ class FileLoader: GraphLoader, Controller() {
         val edges = json.getJsonArray("edges")?.map {
             val jsonObject = it.asJsonObject()
             val first = jsonObject.getInt("first")
-            if (first < 0 || first >= vertices.size) throw IllegalArgumentException("Wrong vertex number!") //@pionep change it to error
+            if (first < 0 || first >= vertices.size) return null //@pionep change it to error
             val second = jsonObject.getInt("second")
-            if (second >= vertices.size || second < 0) throw IllegalArgumentException("Wrong vertex number!") //@pionep change it to error
+            if (second >= vertices.size || second < 0) return null //@pionep change it to error
             val weight = if (jsonObject.containsKey("weight")) jsonObject.getDouble("weight") else 1.0
             Edge(vertices[first].vertex, vertices[second].vertex, weight)
         }
@@ -43,7 +45,7 @@ class FileLoader: GraphLoader, Controller() {
         vertices.forEach { graph.addVertex(it.vertex) }
         edges?.forEach { graph.addEdge(it) }
         val graphView = GraphView(graph, vertices)
-        if (validateGraph(graphView)) return graphView else throw IllegalStateException("An error occurred while opening the graph file!")
+        return if (validateGraph(graphView)) graphView else null
     }
 
     override fun saveGraph(graph: GraphView, data: String) {

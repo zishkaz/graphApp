@@ -11,7 +11,7 @@ class VertexView(
     val vertex: Vertex,
     x: Double = 0.0,
     y: Double = 0.0,
-    color: Color,
+    color: Color = Color.AQUA,
 ) : Circle(x, y, radius, color) {
 
 

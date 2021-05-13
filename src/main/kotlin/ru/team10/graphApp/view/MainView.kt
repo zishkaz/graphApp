@@ -13,6 +13,7 @@ import ru.team10.graphApp.controller.algorithms.gravity
 import ru.team10.graphApp.controller.algorithms.isBarnesHutActive
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
+import ru.team10.graphApp.controller.loader.SQLiteLoader
 import ru.team10.graphApp.model.Graph
 import tornadofx.*
 
@@ -66,14 +67,22 @@ class MainView : View("Graph Application") {
             titledpane("GRAPH") {
                 button("Import") {
                     action {
-                        val window = Popup()
-                        val fileChooser = FileChooser()
-                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-                        fileChooser.extensionFilters.add(importFilter)
-                        fileChooser.title = "Open Resource File"
-                        val file = fileChooser.showOpenDialog(window)
-                        file?.let {
-                            graphView = FileLoader().loadGraph(file.path)
+//                        val window = Popup()
+//                        val fileChooser = FileChooser()
+//                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+//                        fileChooser.extensionFilters.add(importFilter)
+//                        fileChooser.title = "Open Resource File"
+//                        val file = fileChooser.showOpenDialog(window)
+//                        file?.let {
+//                            FileLoader().loadGraph(file.path)?.let {
+//                                graphView = it
+//                                center.getChildList()!!.clear()
+//                                center.add(graphView)
+//                                layout = Layout().applyForceAtlas2(graphView)
+//                            }
+//                        }
+                        SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
+                            graphView = it
                             center.getChildList()!!.clear()
                             center.add(graphView)
                             layout = Layout().applyForceAtlas2(graphView)
@@ -83,15 +92,16 @@ class MainView : View("Graph Application") {
 
                 button("Export") {
                     action {
-                        val window = Popup()
-                        val fileChooser = FileChooser()
-                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-                        fileChooser.extensionFilters.add(importFilter)
-                        fileChooser.title = "Save Graph"
-                        val file = fileChooser.showSaveDialog(window)
-                        file?.let {
-                            FileLoader().saveGraph(graphView, file.path)
-                        }
+//                        val window = Popup()
+//                        val fileChooser = FileChooser()
+//                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+//                        fileChooser.extensionFilters.add(importFilter)
+//                        fileChooser.title = "Save Graph"
+//                        val file = fileChooser.showSaveDialog(window)
+//                        file?.let {
+//                            FileLoader().saveGraph(graphView, file.path)
+//                        }
+                        SQLiteLoader().saveGraph(graphView, "saved.sqlite")
                     }
                 }
             }

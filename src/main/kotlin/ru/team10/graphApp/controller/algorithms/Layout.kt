@@ -21,14 +21,14 @@ private const val globalSpeedDefault = 1.0
 private const val barnesHutTheta = 1.2
 var isBarnesHutActive = false
 
-class Layout: Controller() {
+class Layout : Controller() {
 
     private val dx = hashMapOf<VertexView, Double>()
     private val dy = hashMapOf<VertexView, Double>()
     private val dxOld = hashMapOf<VertexView, Double>()
     private val dyOld = hashMapOf<VertexView, Double>()
 
-    inner class Anim(private val graph: GraphView): AnimationTimer() {
+    inner class Anim(private val graph: GraphView) : AnimationTimer() {
 
         override fun handle(now: Long) {
 
@@ -46,7 +46,11 @@ class Layout: Controller() {
             for (node in graph.vertices()) {
                 val swinging = sqrt((dxOld[node]!! - dx[node]!!).pow(2) + (dyOld[node]!! - dy[node]!!).pow(2))
                 totalSwinging += node.vertex.mass * swinging
-                totalEffectiveTraction += node.vertex.mass * 0.5 * sqrt((dxOld[node]!! + dx[node]!!).pow(2) + (dyOld[node]!! + dy[node]!!).pow(2))
+                totalEffectiveTraction += node.vertex.mass * 0.5 * sqrt(
+                    (dxOld[node]!! + dx[node]!!).pow(2) + (dyOld[node]!! + dy[node]!!).pow(
+                        2
+                    )
+                )
             }
             val estimatedOptimalJitterTolerance = 0.05 * sqrt(graph.vertices().size.toDouble())
             val minJT = sqrt(estimatedOptimalJitterTolerance)
@@ -92,6 +96,7 @@ class Layout: Controller() {
         var massCenterY = 0.0
         var size = 0.0
         val subregions = ArrayList<Region>()
+
         init {
             updateMassAndGeometry()
         }
@@ -171,7 +176,8 @@ class Layout: Controller() {
         return Anim(graph)
     }
 
-    private fun computeDistance(v: VertexView, u: VertexView) = sqrt((v.centerX - u.centerX).pow(2) + (v.centerY - u.centerY).pow(2))
+    private fun computeDistance(v: VertexView, u: VertexView) =
+        sqrt((v.centerX - u.centerX).pow(2) + (v.centerY - u.centerY).pow(2))
 
     private fun applyAttractionForce(edges: Collection<EdgeView>) {
 
@@ -201,7 +207,7 @@ class Layout: Controller() {
             val xDist = v.centerX - u.centerX
             val yDist = v.centerY - u.centerY
             val dist = computeDistance(v, u) - v.radius - u.radius
-            
+
             val factor = if (dist > 0) scaling * v.vertex.mass * u.vertex.mass / dist.pow(2)
             else antiCollisionCoeff * v.vertex.mass * u.vertex.mass
             dx[v] = dx[v]!! + xDist * factor
@@ -254,8 +260,8 @@ class Layout: Controller() {
             val dist = sqrt(xDist.pow(2) + yDist.pow(2)) - v.radius
             if (dist > 0) {
                 val factor = v.vertex.mass * gravity
-                dx[v] = dx[v]!! -  xDist * factor
-                dy[v] = dy[v]!! -  yDist * factor
+                dx[v] = dx[v]!! - xDist * factor
+                dy[v] = dy[v]!! - yDist * factor
             }
         }
     }
@@ -265,7 +271,7 @@ class Layout: Controller() {
         val listNodes = nodes.toList()
         val pairs = mutableListOf<Pair<VertexView, VertexView>>()
         for (i in listNodes.indices) {
-            for (j in i+1 until listNodes.size) {
+            for (j in i + 1 until listNodes.size) {
                 pairs.add(listNodes[i] to listNodes[j])
             }
         }

@@ -29,6 +29,7 @@ dependencies {
     implementation("no.tornado:tornadofx:1.7.20") {
         exclude("org.jetbrains.kotlin")
     }
+    implementation("org.xerial", "sqlite-jdbc", "3.34.0")
 }
 
 val compileKotlin: KotlinCompile by tasks

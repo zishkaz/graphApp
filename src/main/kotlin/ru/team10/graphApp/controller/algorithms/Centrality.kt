@@ -49,7 +49,11 @@ class Centrality : Controller() {
         println("nice")
     }
 
-    private fun setUpVertices(start: Vertex, vert: List<Vertex>, verticesExtraData: HashMap<Vertex, ExtraVertexData>): Double {
+    private fun setUpVertices(
+        start: Vertex,
+        vert: List<Vertex>,
+        verticesExtraData: HashMap<Vertex, ExtraVertexData>
+    ): Double {
 
         val q = TreeSet<Vertex>()
 

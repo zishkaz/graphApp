@@ -6,6 +6,6 @@ import tornadofx.Controller
 
 interface GraphLoader {
 
-    fun loadGraph(data: String): GraphView
+    fun loadGraph(data: String): GraphView?
     fun saveGraph(graph: GraphView, data: String)
 }

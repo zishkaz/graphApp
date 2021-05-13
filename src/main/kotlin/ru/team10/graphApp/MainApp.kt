@@ -5,7 +5,7 @@ import ru.team10.graphApp.view.MainView
 import tornadofx.App
 import tornadofx.launch
 
-class MainApp: App(MainView::class) {
+class MainApp : App(MainView::class) {
     override fun start(stage: Stage) {
         //starting
         with(stage) {

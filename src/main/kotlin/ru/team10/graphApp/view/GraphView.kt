@@ -8,7 +8,7 @@ import ru.team10.graphApp.model.Graph
 import tornadofx.add
 import java.util.*
 
-class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()): Pane() {
+class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()) : Pane() {
 
     private val vertices by lazy {
 
@@ -20,7 +20,11 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
 
         graph.edges().associateWith {
 
-            EdgeView(it, vertices[it.first] ?: throw IllegalStateException("Shit"), vertices[it.second] ?: throw IllegalStateException("Shit"))
+            EdgeView(
+                it,
+                vertices[it.first] ?: throw IllegalStateException("Shit"),
+                vertices[it.second] ?: throw IllegalStateException("Shit")
+            )
         }
     }
 

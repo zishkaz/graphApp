@@ -1,45 +1,36 @@
 {
   "vertices": [
-
     {
-      "id" : "Vlad"
+      "id": "Vlad"
     },
-
     {
-      "id" : "Alice",
-      "communityID" : 1
+      "id": "Alice",
+      "communityID": 1
     },
-
     {
-      "id" : "Sergey"
+      "id": "Sergey"
     },
-
     {
-      "id" : "Alexander"
+      "id": "Alexander"
     }
   ],
-
-  "edges" : [
-
+  "edges": [
     {
-      "first" : 0,
-      "second" : 1,
-      "weight" : 2.5
+      "first": 0,
+      "second": 1,
+      "weight": 2.5
     },
-
     {
-      "first" : 1,
-      "second" : 2
+      "first": 1,
+      "second": 2
     },
-
     {
-      "first" : 2,
-      "second" : 0
+      "first": 2,
+      "second": 0
     },
-
     {
-      "first" : 1,
-      "second" : 3
+      "first": 1,
+      "second": 3
     }
   ]
 }
