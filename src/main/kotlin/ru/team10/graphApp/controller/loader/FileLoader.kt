@@ -9,6 +9,8 @@ import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 import tornadofx.getDouble
 import tornadofx.loadJsonObject
+import java.io.File
+import javax.json.Json
 import kotlin.io.path.Path
 import kotlin.random.Random
 
@@ -44,7 +46,32 @@ class FileLoader: GraphLoader, Controller() {
         if (validateGraph(graphView)) return graphView else throw IllegalStateException("An error occurred while opening a graph!")
     }
 
-    override fun saveGraph(graph: Graph) {
-
+    override fun saveGraph(graph: GraphView, data: String) {
+        val json = Json.createObjectBuilder()
+        val verticesJson = Json.createArrayBuilder()
+        val vertexToNumber = hashMapOf<VertexView, Int>()
+        for (node in graph.vertices()) {
+            vertexToNumber[node] = vertexToNumber.size
+            val vertexJson = Json.createObjectBuilder()
+            vertexJson.add("id", node.vertex.id)
+            if (node.vertex.centralityRang != -1.0) vertexJson.add("centralityRang", node.vertex.centralityRang)
+            if (node.vertex.communityID != -1) vertexJson.add("centralityRang", node.vertex.communityID)
+            vertexJson.add("posX", node.centerX)
+            vertexJson.add("posY", node.centerY)
+            verticesJson.add(vertexJson)
+        }
+        json.add("vertices", verticesJson)
+        val edgesJson = Json.createArrayBuilder()
+        for (edge in graph.edges()) {
+            val edgeJson = Json.createObjectBuilder()
+            edgeJson.add("first", vertexToNumber.getOrDefault(edge.first, 0))
+            edgeJson.add("second", vertexToNumber.getOrDefault(edge.second, 0))
+            if (edge.edge.weight != 1.0) edgeJson.add("weight", edge.edge.weight)
+            edgesJson.add(edgeJson)
+        }
+        json.add("edges", edgesJson)
+        val file = File(data)
+        file.createNewFile()
+        file.writeText(json.toString())
     }
 }
