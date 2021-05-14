@@ -135,7 +135,9 @@ class MainView : View("Graph Application") {
 //                                }
 //                            }
 //                        }
-                    button("Neo4j") {}
+                    button("Neo4j") {
+
+                    }
                 }
 
                 label("EXPORT")
@@ -157,137 +159,138 @@ class MainView : View("Graph Application") {
                     button("Neo4j") {}
                 }
             }
-        }
-        titledpane("LAYOUT") {
-            vbox(5) {
-                val kek = togglebutton("START") {
-                    this.isSelected = false
-                    action {
-                        text = if (isSelected) {
-                            runAsync {
-                                apply()
-                            }
-                            "STOP"
-                        } else {
-                            runAsync {
-                                applyStop()
-                            }
-                            "START"
-                        }
-                    }
-                }
-                label("Scaling")
-                textfield {
-                    this.promptText = " = $scaling"
-                    filterInput { it.controlNewText.isDouble() }
-                    this.setOnKeyReleased { event ->
-                        if (event.code == KeyCode.ENTER) {
-                            if (this.text == null || this.text.trim().isBlank()) {
-                                alert(Alert.AlertType.WARNING, "Please, input Scaling constant !")
-                            } else if (this.text.toDouble() <= 0.0) {
-                                alert(Alert.AlertType.WARNING, "Scaling constant must be positive !")
+
+            titledpane("LAYOUT") {
+                vbox(5) {
+                    val kek = togglebutton("START") {
+                        this.isSelected = false
+                        action {
+                            text = if (isSelected) {
+                                runAsync {
+                                    apply()
+                                }
+                                "STOP"
                             } else {
-                                scaling = this.text.toDouble()
-                                println("scal $scaling")
-                                this.parent.requestFocus()
+                                runAsync {
+                                    applyStop()
+                                }
+                                "START"
                             }
                         }
                     }
-                }
-
-                label("Gravity")
-                textfield {
-                    this.promptText = " = $gravity"
-                    filterInput { it.controlNewText.isDouble() }
-                    this.setOnKeyReleased { event ->
-                        if (event.code == KeyCode.ENTER) {
-                            if (this.text == null || this.text.trim().isBlank()) {
-                                alert(Alert.AlertType.WARNING, "Please, input Gravity constant !")
-                            } else if (this.text.toDouble() < 0.0) {
-                                alert(Alert.AlertType.WARNING, "Gravity constant must be not negative !")
-                            } else {
-                                gravity = this.text.toDouble()
-                                println("grav: $gravity")
-                                this.parent.requestFocus()
+                    label("Scaling")
+                    textfield {
+                        this.promptText = " = $scaling"
+                        filterInput { it.controlNewText.isDouble() }
+                        this.setOnKeyReleased { event ->
+                            if (event.code == KeyCode.ENTER) {
+                                if (this.text == null || this.text.trim().isBlank()) {
+                                    alert(Alert.AlertType.WARNING, "Please, input Scaling constant !")
+                                } else if (this.text.toDouble() <= 0.0) {
+                                    alert(Alert.AlertType.WARNING, "Scaling constant must be positive !")
+                                } else {
+                                    scaling = this.text.toDouble()
+                                    println("scal $scaling")
+                                    this.parent.requestFocus()
+                                }
                             }
                         }
                     }
 
-                }
+                    label("Gravity")
+                    textfield {
+                        this.promptText = " = $gravity"
+                        filterInput { it.controlNewText.isDouble() }
+                        this.setOnKeyReleased { event ->
+                            if (event.code == KeyCode.ENTER) {
+                                if (this.text == null || this.text.trim().isBlank()) {
+                                    alert(Alert.AlertType.WARNING, "Please, input Gravity constant !")
+                                } else if (this.text.toDouble() < 0.0) {
+                                    alert(Alert.AlertType.WARNING, "Gravity constant must be not negative !")
+                                } else {
+                                    gravity = this.text.toDouble()
+                                    println("grav: $gravity")
+                                    this.parent.requestFocus()
+                                }
+                            }
+                        }
 
-                checkbox("BarnesHut optimisation") {
-                    action {
-                        isBarnesHutActive = isSelected
-                        println(isBarnesHutActive)
+                    }
+
+                    checkbox("BarnesHut optimisation") {
+                        action {
+                            isBarnesHutActive = isSelected
+                            println(isBarnesHutActive)
+                        }
                     }
                 }
             }
-        }
-        titledpane("Community") {
-            vbox(10) {
-                button("Start Leiden algorithm") {
-                    action {
-                        runAsync {
-                            graphFilename?.let {
-                                leiden = Leiden(it, "src/output.txt")
-                                leiden.startLeiden(0.2)
+            titledpane("Community") {
+                vbox(10) {
+                    button("Start Leiden algorithm") {
+                        action {
+                            runAsync {
+                                graphFilename?.let {
+                                    leiden = Leiden(it, "src/output.txt")
+                                    leiden.startLeiden(0.2)
+                                }
                             }
                         }
                     }
-                }
-                val e = button()
-                e.text("RESULT")
-                e.setOnMouseReleased {
-                    //e.isDisable = true
-                    scrollpane {
-                        textflow {
-                            for (v in Graph().vertices())
-                                text("ID: ${v.id} ----\n community ID: ${v.communityID}\n")
+                    val e = button()
+                    e.text("RESULT")
+                    e.setOnMouseReleased {
+                        //e.isDisable = true
+                        scrollpane {
+                            textflow {
+                                for (v in Graph().vertices())
+                                    text("ID: ${v.id} ----\n community ID: ${v.communityID}\n")
+                            }
                         }
                     }
-                }
-                button("SAVE") {
-                    action {
-                        val window = Popup()
-                        val fileChooser = FileChooser()
-                        val importFilter =
-                            FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
-                        fileChooser.extensionFilters.add(importFilter)
-                        fileChooser.title = "Save result"
-                        val file = fileChooser.showSaveDialog(window)
-                        file?.let {}
+                    button("SAVE") {
+                        action {
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter =
+                                FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Save result"
+                            val file = fileChooser.showSaveDialog(window)
+                            file?.let {}
+                        }
                     }
-                }
 
+                }
             }
-        }
-        titledpane("Centrality") {
+            titledpane("Centrality") {
 
-            vbox(10) {
-                val e = button()
-                e.text("RESULT")
-                e.setOnMouseReleased {
-                    //e.isDisable = true
-                    scrollpane {
-                        textflow {
-                            for (v in Graph().vertices())
-                                text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
+                vbox(10) {
+                    val e = button()
+                    e.text("RESULT")
+                    e.setOnMouseReleased {
+                        //e.isDisable = true
+                        scrollpane {
+                            textflow {
+                                for (v in Graph().vertices())
+                                    text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
+                            }
                         }
                     }
-                }
-                button("SAVE") {
-                    action {
-                        val window = Popup()
-                        val fileChooser = FileChooser()
-                        val importFilter =
-                            FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
-                        fileChooser.extensionFilters.add(importFilter)
-                        fileChooser.title = "Save result"
-                        val file = fileChooser.showSaveDialog(window)
-                        file?.let {}
+                    button("SAVE") {
+                        action {
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter =
+                                FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Save result"
+                            val file = fileChooser.showSaveDialog(window)
+                            file?.let {}
+                        }
                     }
-                }
 
+                }
             }
         }
 
