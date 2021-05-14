@@ -12,6 +12,7 @@ import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.algorithms.Layout
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
+import ru.team10.graphApp.controller.loader.Neo4jLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.utils.buildCentralityReport
@@ -127,7 +128,7 @@ class MainView : View("Graph Application") {
                                 label("URI")
                                 val uri = textfield()
 
-                                label("Udername")
+                                label("Username")
                                 val username = textfield()
 
                                 label("Password")
@@ -143,7 +144,12 @@ class MainView : View("Graph Application") {
                                         )
                                     }
                                     data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
-                                    println(data)
+                                    Neo4jLoader().loadGraph(data)?.let {
+                                        graphView = it
+                                        center.getChildList()!!.clear()
+                                        center.add(graphView)
+                                        layoutAnim = Layout.applyForceAtlas2(graphView)
+                                    }
                                     hide()
                                     neo4jButton.isDisable = false
                                 }
@@ -212,9 +218,9 @@ class MainView : View("Graph Application") {
                                         )
                                     }
                                     data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
-                                    println(data)
+                                    Neo4jLoader().saveGraph(graphView, data)
                                     hide()
-                                    neo4jButton.isDisable = false
+                                    sqliteButton.isDisable = false
                                 }
 
                             }
