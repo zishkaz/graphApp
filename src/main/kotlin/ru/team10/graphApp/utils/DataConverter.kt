@@ -1,5 +1,6 @@
 package util
 
+import ru.team10.graphApp.controller.algorithms.utilityPathname
 import ru.team10.graphApp.view.GraphView
 import java.io.File
 
@@ -9,7 +10,7 @@ class DataConverter(
     fun prepareDataForClustering() {
         val vertices = graph.getVerticesId().let { it.zip(it.indices) }.toMap()
         val edges = graph.edges()
-        File("src/main/kotlin/leidenUtil.txt").writeText(
+        File(utilityPathname).writeText(
             edges.joinToString("\n") { edge ->
                 listOf(
                     vertices[edge.edge.first],

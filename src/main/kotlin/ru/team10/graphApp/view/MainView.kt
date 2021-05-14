@@ -35,9 +35,6 @@ class MainView : View("Graph Application") {
     private var resolutionTextField = TextField()
 
 
-    private var graphFilename: String? = "src/input.txt"
-
-
     override val root = borderpane {
         this.stylesheets.add("1.css")
         fun apply() {
@@ -341,11 +338,11 @@ class MainView : View("Graph Application") {
                         action {
                             lateinit var leiden: Leiden
                             runAsync {
-                                graphFilename?.let {
-                                    leiden = Leiden(it, "src/output.txt")
-                                    leiden.startLeiden(leidenResolution)
-                                }
+                                leiden = Leiden(graphView)
+                                leiden.startLeiden(leidenResolution)
+                                leiden.setCommunity()
                             }
+
                         }
                     }
                     val e = button()
@@ -378,7 +375,7 @@ class MainView : View("Graph Application") {
                             if (graphView.vertices().map {it.vertex.communityID}.contains(-1)) {
                                 alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
                             } else {
-                                colorAccordingToCommunity(graphView)
+                               colorAccordingToCommunity(graphView)
                             }
                         }
                     }
