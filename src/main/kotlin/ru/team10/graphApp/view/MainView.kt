@@ -32,6 +32,8 @@ class MainView : View("Graph Application") {
     private var scalingTextField = TextField()
     private var gravityTextField = TextField()
     private var jitterTextField = TextField()
+    private var resolutionTextField = TextField()
+
 
     private var graphFilename: String? = "src/input.txt"
 
@@ -316,6 +318,25 @@ class MainView : View("Graph Application") {
             titledpane("Community") {
                 this.isExpanded = false
                 vbox(10) {
+                    label("Resolution")
+                    resolutionTextField = textfield {
+                        this.promptText = " = ${leidenResolution}"
+                        filterInput { it.controlNewText.isDouble() }
+                        this.setOnKeyReleased { event ->
+                            if (event.code == KeyCode.ENTER) {
+                                if (this.text == null || this.text.trim().isBlank()) {
+                                    alert(Alert.AlertType.WARNING, "Please, input Resolution constant!")
+                                } else if (this.text.toDouble() <= 0.0) {
+                                    alert(Alert.AlertType.WARNING, "Resolution constant must be positive!")
+                                } else {
+                                    text = text.toDouble().toString()
+                                    leidenResolution = this.text.toDouble()
+                                    this.parent.requestFocus()
+                                }
+                            }
+                        }
+                    }
+
                     button("Start Leiden algorithm") {
                         action {
                             lateinit var leiden: Leiden
@@ -381,7 +402,7 @@ class MainView : View("Graph Application") {
                         //e.isDisable = true
                         scrollpane {
                             textflow {
-                                for (v in graphView.vertices().map{it.vertex})
+                                for (v in graphView.vertices().map{it.vertex}.sortedByDescending { it.centralityRang })
                                     text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
                             }
                         }
@@ -431,6 +452,7 @@ class MainView : View("Graph Application") {
                                 scalingTextField.text = "${Layout.scaling}"
                                 gravityTextField.text = "${Layout.gravity}"
                                 jitterTextField.text = "${Layout.jitterTolerance}"
+                                resolutionTextField.text = "$leidenResolution"
                             }
                         }
                     }
