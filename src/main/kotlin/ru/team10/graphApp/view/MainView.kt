@@ -33,7 +33,7 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layout.start()
-//                centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
+//               centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -65,22 +65,23 @@ class MainView : View("Graph Application") {
 
         left = vbox {
             titledpane("GRAPH") {
-                borderpane {
-                    left {
-                        button("Import") {
+                vbox(5) {
+                    label("IMPORT")
+                    hbox(5) {
+                        button("JSON") {
                             action {
-//                        val window = Popup()
-//                        val fileChooser = FileChooser()
-//                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-//                        fileChooser.extensionFilters.add(importFilter)
-//                        fileChooser.title = "Open Resource File"
-//                        val file = fileChooser.showOpenDialog(window)
-//                        file?.let {
-//                            FileLoader().loadGraph(file.path)?.let {
-//                                graphView = it
-//                                center.getChildList()!!.clear()
-//                                center.add(graphView)
-//                                layout = Layout().applyForceAtlas2(graphView)
+//                                val window = Popup()
+//                                val fileChooser = FileChooser()
+//                                val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+//                                fileChooser.extensionFilters.add(importFilter)
+//                                fileChooser.title = "Open Resource File"
+//                                val file = fileChooser.showOpenDialog(window)
+//                                file?.let {
+//                                    graphView = FileLoader().loadGraph(file.path)
+//                                    center.getChildList()!!.clear()
+//                                    center.add(graphView)
+//                                    layout = Layout().applyForceAtlas2(graphView)
+//                                }
 //                            }
 //                        }
                                 SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
@@ -96,20 +97,10 @@ class MainView : View("Graph Application") {
                     right {
                         button("Export") {
                             action {
-//                        val window = Popup()
-//                        val fileChooser = FileChooser()
-//                        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-//                        fileChooser.extensionFilters.add(importFilter)
-//                        fileChooser.title = "Save Graph"
-//                        val file = fileChooser.showSaveDialog(window)
-//                        file?.let {
-//                            FileLoader().saveGraph(graphView, file.path)
-//                        }
                                 SQLiteLoader().saveGraph(graphView, "saved.sqlite")
                             }
                         }
                     }
-
                     bottom {
                         togglebutton("Hide edges") {
                             isSelected = false
@@ -122,14 +113,55 @@ class MainView : View("Graph Application") {
                                     "Hide edges"
                                 }
                             }
+
                         }
                     }
+
+
+//                        val r = button()
+//                        r.text = "SQLite"
+//                        r.setOnMouseReleased {
+//                            r.isDisable = true
+//                            hbox {
+//                                val input = textfield()
+//                                input.promptText = ("URI or ...")
+//                                var data: String
+//                                input.setOnKeyReleased { event ->
+//                                    if (event.code == KeyCode.ENTER) {
+//                                        data = input.text
+//                                        hide()
+//                                        r.isDisable = false
+//                                    }
+//                                }
+//                            }
+//                        }
+                    button("Neo4j") {}
+                }
+
+                label("EXPORT")
+                hbox(5) {
+                    button("JSON") {
+                        action {
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Save Graph"
+                            val file = fileChooser.showSaveDialog(window)
+                            file?.let {
+                                FileLoader().saveGraph(graphView, file.path)
+                            }
+                        }
+                    }
+                    button("SQLite") {}
+                    button("Neo4j") {}
                 }
             }
-            titledpane("LAYOUT") {
-                togglebutton("START") {
+        }
+        titledpane("LAYOUT") {
+            vbox(5) {
+                val kek = togglebutton("START") {
                     this.isSelected = false
-
                     action {
                         text = if (isSelected) {
                             runAsync {
@@ -146,7 +178,7 @@ class MainView : View("Graph Application") {
                 }
                 label("Scaling")
                 textfield {
-                    this.promptText = "Input"
+                    this.promptText = " = $scaling"
                     filterInput { it.controlNewText.isDouble() }
                     this.setOnKeyReleased { event ->
                         if (event.code == KeyCode.ENTER) {
@@ -165,7 +197,7 @@ class MainView : View("Graph Application") {
 
                 label("Gravity")
                 textfield {
-                    this.promptText = "Input"
+                    this.promptText = " = $gravity"
                     filterInput { it.controlNewText.isDouble() }
                     this.setOnKeyReleased { event ->
                         if (event.code == KeyCode.ENTER) {
@@ -180,6 +212,7 @@ class MainView : View("Graph Application") {
                             }
                         }
                     }
+
                 }
 
                 checkbox("BarnesHut optimisation") {
@@ -189,21 +222,76 @@ class MainView : View("Graph Application") {
                     }
                 }
             }
-            titledpane("Some other editor") {
-                stackpane {
-                    button("Start Leiden algorithm") {
-                        action {
-                            runAsync {
-                                graphFilename?.let {
-                                    leiden = Leiden(it, "src/output.txt")
-                                    leiden.startLeiden(0.2)
-                                }
+        }
+        titledpane("Community") {
+            vbox(10) {
+                button("Start Leiden algorithm") {
+                    action {
+                        runAsync {
+                            graphFilename?.let {
+                                leiden = Leiden(it, "src/output.txt")
+                                leiden.startLeiden(0.2)
                             }
                         }
                     }
                 }
+                val e = button()
+                e.text("RESULT")
+                e.setOnMouseReleased {
+                    //e.isDisable = true
+                    scrollpane {
+                        textflow {
+                            for (v in Graph().vertices())
+                                text("ID: ${v.id} ----\n community ID: ${v.communityID}\n")
+                        }
+                    }
+                }
+                button("SAVE") {
+                    action {
+                        val window = Popup()
+                        val fileChooser = FileChooser()
+                        val importFilter =
+                            FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
+                        fileChooser.extensionFilters.add(importFilter)
+                        fileChooser.title = "Save result"
+                        val file = fileChooser.showSaveDialog(window)
+                        file?.let {}
+                    }
+                }
+
             }
         }
+        titledpane("Centrality") {
+
+            vbox(10) {
+                val e = button()
+                e.text("RESULT")
+                e.setOnMouseReleased {
+                    //e.isDisable = true
+                    scrollpane {
+                        textflow {
+                            for (v in Graph().vertices())
+                                text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
+                        }
+                    }
+                }
+                button("SAVE") {
+                    action {
+                        val window = Popup()
+                        val fileChooser = FileChooser()
+                        val importFilter =
+                            FileChooser.ExtensionFilter("Text file (*.txt)", "*.txt")
+                        fileChooser.extensionFilters.add(importFilter)
+                        fileChooser.title = "Save result"
+                        val file = fileChooser.showSaveDialog(window)
+                        file?.let {}
+                    }
+                }
+
+            }
+        }
+
+
 
         style {
             backgroundColor += Color.AZURE
