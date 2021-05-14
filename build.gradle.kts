@@ -30,6 +30,8 @@ dependencies {
         exclude("org.jetbrains.kotlin")
     }
     implementation("org.xerial", "sqlite-jdbc", "3.34.0")
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.0")
+    implementation("org.yaml", "snakeyaml", "1.8")
 }
 
 val compileKotlin: KotlinCompile by tasks

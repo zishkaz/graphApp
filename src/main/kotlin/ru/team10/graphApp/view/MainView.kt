@@ -8,9 +8,6 @@ import javafx.stage.FileChooser
 import javafx.stage.Popup
 import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.algorithms.Layout
-import ru.team10.graphApp.controller.algorithms.scaling
-import ru.team10.graphApp.controller.algorithms.gravity
-import ru.team10.graphApp.controller.algorithms.isBarnesHutActive
 import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
@@ -180,7 +177,7 @@ class MainView : View("Graph Application") {
                     }
                     label("Scaling")
                     textfield {
-                        this.promptText = " = $scaling"
+                        this.promptText = " = ${Layout().scaling}"
                         filterInput { it.controlNewText.isDouble() }
                         this.setOnKeyReleased { event ->
                             if (event.code == KeyCode.ENTER) {
@@ -189,8 +186,7 @@ class MainView : View("Graph Application") {
                                 } else if (this.text.toDouble() <= 0.0) {
                                     alert(Alert.AlertType.WARNING, "Scaling constant must be positive !")
                                 } else {
-                                    scaling = this.text.toDouble()
-                                    println("scal $scaling")
+                                    Layout().scaling = this.text.toDouble()
                                     this.parent.requestFocus()
                                 }
                             }
@@ -199,7 +195,7 @@ class MainView : View("Graph Application") {
 
                     label("Gravity")
                     textfield {
-                        this.promptText = " = $gravity"
+                        this.promptText = " = ${Layout().gravity}"
                         filterInput { it.controlNewText.isDouble() }
                         this.setOnKeyReleased { event ->
                             if (event.code == KeyCode.ENTER) {
@@ -208,8 +204,7 @@ class MainView : View("Graph Application") {
                                 } else if (this.text.toDouble() < 0.0) {
                                     alert(Alert.AlertType.WARNING, "Gravity constant must be not negative !")
                                 } else {
-                                    gravity = this.text.toDouble()
-                                    println("grav: $gravity")
+                                    Layout().gravity = this.text.toDouble()
                                     this.parent.requestFocus()
                                 }
                             }
@@ -219,8 +214,7 @@ class MainView : View("Graph Application") {
 
                     checkbox("BarnesHut optimisation") {
                         action {
-                            isBarnesHutActive = isSelected
-                            println(isBarnesHutActive)
+                            Layout().isBarnesHutActive = isSelected
                         }
                     }
                 }

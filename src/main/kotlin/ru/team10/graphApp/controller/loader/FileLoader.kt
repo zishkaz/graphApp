@@ -30,7 +30,7 @@ class FileLoader : GraphLoader, Controller() {
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(1000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(1000.0)
             val vertex = Vertex(id, centralityRang, communityID)
-            VertexView(vertex, posX, posY, Color.AQUA)
+            VertexView(vertex, posX, posY)
         } ?: throw NoSuchFieldException("Empty graph can't be loaded!") //@pionep change it to error
         val edges = json.getJsonArray("edges")?.map {
             val jsonObject = it.asJsonObject()

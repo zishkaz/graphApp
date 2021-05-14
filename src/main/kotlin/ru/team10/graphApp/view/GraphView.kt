@@ -12,7 +12,7 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
 
     private val vertices by lazy {
 
-        if (verticesView.isEmpty()) graph.vertices().associateWith { VertexView(it, 0.0, 0.0, Color.AQUA) }
+        if (verticesView.isEmpty()) graph.vertices().associateWith { VertexView(it, 0.0, 0.0) }
         else verticesView.associateBy { it.vertex }
     }
 
