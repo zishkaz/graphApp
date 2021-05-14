@@ -356,6 +356,13 @@ class MainView : View("Graph Application") {
             }
             titledpane("Centrality") {
                 this.isExpanded = false
+                button("START"){
+                    action{
+                        runAsync{
+                            centrality.applyHarmonicCentrality(graphView, graphView.vertices())
+                        }
+                    }
+                }
                 vbox(10) {
                     val e = button()
                     e.text("RESULT")

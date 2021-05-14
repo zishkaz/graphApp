@@ -4,6 +4,7 @@ import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
+import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 import java.util.*
@@ -23,10 +24,10 @@ class Centrality : Controller() {
         }
     }
 
-    fun applyHarmonicCentrality(graph: Graph, vertices: Collection<VertexView>) {
+    fun applyHarmonicCentrality(graph: GraphView, vertices: Collection<VertexView>) {
 
-        val edges = graph.edges().toList()
-        val vert = graph.vertices().toList()
+        val edges = graph.edges().map{it.edge}.toList()
+        val vert = graph.vertices().map{it.vertex}.toList()
         val verticesExtraData = hashMapOf<Vertex, ExtraVertexData>()
         for (i in vert) {
             verticesExtraData[i] = ExtraVertexData(i)

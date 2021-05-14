@@ -4,33 +4,13 @@
       "id": "Vlad"
     },
     {
-      "id": "Alice",
-      "communityID": 1
-    },
-    {
-      "id": "Sergey"
-    },
-    {
-      "id": "Alexander"
+      "id": "Alice"
     }
   ],
   "edges": [
     {
       "first": 0,
-      "second": 1,
-      "weight": 2.5
-    },
-    {
-      "first": 1,
-      "second": 2
-    },
-    {
-      "first": 2,
-      "second": 0
-    },
-    {
-      "first": 1,
-      "second": 3
+      "second": 1
     }
   ]
 }
