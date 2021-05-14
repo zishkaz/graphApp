@@ -25,11 +25,22 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
+    //Leiden
     implementation("com.github.CWTSLeiden:networkanalysis:1.1.0")
+
+    //Neo4j
+    implementation("org.neo4j.driver", "neo4j-java-driver", "4.2.5")
+
+    
     implementation("no.tornado:tornadofx:1.7.20") {
         exclude("org.jetbrains.kotlin")
     }
     implementation("org.xerial", "sqlite-jdbc", "3.34.0")
+
+    // Logging
+    implementation("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
+    implementation("org.slf4j", "slf4j-simple", "1.7.29")
 }
 
 val compileKotlin: KotlinCompile by tasks
