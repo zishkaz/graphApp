@@ -8,6 +8,7 @@ import ru.team10.graphApp.view.GraphView
 import java.io.File
 import kotlin.math.pow
 
+internal var leidenResolution: Double = 0.2
 
 class Leiden(
     private val inputFilename: String,
@@ -16,21 +17,5 @@ class Leiden(
     fun startLeiden(resolution: Double) {
         val args = arrayOf("-r", "$resolution", "-o", outputFilename, inputFilename)
         RunNetworkClustering.main(args)
-    }
-}
-
-internal fun colorAccordingToCommunity(graph: GraphView) {
-    val communityCount = 1 + graph.vertices().maxOf { it.vertex.communityID }
-    val step = 16777216 / communityCount
-    var colorNow = 0
-    val communityToColor = hashMapOf<Int, Color>()
-    repeat(communityCount) {
-
-        communityToColor[it] = Color.rgb(colorNow / 65536, (colorNow % 65536) / 256, colorNow % 256 )
-        colorNow += step
-    }
-    for (node in graph.vertices()) {
-
-        node.color = communityToColor[node.vertex.communityID]!!
     }
 }
