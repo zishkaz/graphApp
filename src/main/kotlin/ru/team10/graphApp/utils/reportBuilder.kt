@@ -10,10 +10,11 @@ fun buildCommunityDetectionReport(graph: GraphView, file: File) {
         if (communityIdToNodes.containsKey(node.communityID)) communityIdToNodes[node.communityID]!!.add(node.id) else communityIdToNodes[node.communityID] =
             hashSetOf(node.id)
     }
+    file.writeText("")
     for (keys in communityIdToNodes.keys) {
-        file.writeText("$keys:\n")
+        file.appendText("$keys:\n")
         for (id in communityIdToNodes[keys]!!) {
-            file.writeText("\tid\n")
+            file.appendText("\tid\n")
         }
     }
 }
@@ -21,7 +22,8 @@ fun buildCommunityDetectionReport(graph: GraphView, file: File) {
 fun buildCentralityReport(graph: GraphView, file: File) {
 
     val nodes = graph.vertices().map { it.vertex }.sortedByDescending { it.centralityRang }
+    file.writeText("")
     for (node in nodes) {
-        file.writeText("${node.id} = ${node.centralityRang}\n")
+        file.appendText("${node.id} = ${node.centralityRang}\n")
     }
 }
