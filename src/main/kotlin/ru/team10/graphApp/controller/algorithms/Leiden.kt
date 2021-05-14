@@ -1,22 +1,46 @@
 package ru.team10.graphApp.controller.algorithms
 
 import javafx.scene.paint.Color
-import ru.team10.graphApp.model.Graph
-import ru.team10.graphApp.model.Vertex
 import nl.cwts.networkanalysis.run.RunNetworkClustering
 import ru.team10.graphApp.view.GraphView
+import util.DataConverter
 import java.io.File
-import kotlin.math.pow
 
 internal var leidenResolution: Double = 0.2
 
+const val leidenPathname = "src/main/kotlin/leidenOutput.csv"
+const val utilityPathname = "src/main/kotlin/leidenUtil.txt"
+
 class Leiden(
-    private val inputFilename: String,
-    private val outputFilename: String
+    private val graph: GraphView
 ) {
     fun startLeiden(resolution: Double) {
-        val args = arrayOf("-r", "$resolution", "-o", outputFilename, inputFilename)
-        RunNetworkClustering.main(args)
+        val dataConverter = DataConverter(graph)
+        dataConverter.prepareDataForClustering()
+        RunNetworkClustering.main(
+            arrayOf("-r", "$resolution", "-o", leidenPathname, utilityPathname)
+        )
+    }
+
+    fun setCommunity() {
+        val communityIDs = mutableMapOf<Int, Int>()
+        File(leidenPathname).readLines().map { line ->
+            val (vertex , community) = line.split("\t").toMutableList()
+            communityIDs[vertex.toInt()] = community.toInt()
+        }
+        val vertices = graph.vertices()
+        val verticesID = graph.getVerticesId().let { it.zip(it.indices) }.toMap()
+        vertices.forEach{el->
+            el.vertex.communityID = communityIDs[verticesID[el.vertex]]?:-1
+        }
+        deleteUtilityFiles()
+    }
+
+    companion object {
+        fun deleteUtilityFiles() {
+            File(utilityPathname).delete()
+            File(leidenPathname).delete()
+        }
     }
 }
 
@@ -27,7 +51,7 @@ internal fun colorAccordingToCommunity(graph: GraphView) {
     val communityToColor = hashMapOf<Int, Color>()
     repeat(communityCount) {
 
-        communityToColor[it] = Color.rgb(colorNow / 65536, (colorNow % 65536) / 256, colorNow % 256 )
+        communityToColor[it] = Color.rgb(colorNow / 65536, (colorNow % 65536) / 256, colorNow % 256)
         colorNow += step
     }
     for (node in graph.vertices()) {
@@ -35,3 +59,4 @@ internal fun colorAccordingToCommunity(graph: GraphView) {
         node.color = communityToColor[node.vertex.communityID]!!
     }
 }
+

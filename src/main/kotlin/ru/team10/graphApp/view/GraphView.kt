@@ -29,6 +29,9 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
     }
 
     fun vertices(): Collection<VertexView> = vertices.values
+
+    fun getVerticesId() = vertices.keys.toList()
+
     fun edges(): Collection<EdgeView> = edges.values
 
     init {
