@@ -59,7 +59,21 @@ class MainView : View("Graph Application") {
                 }
             }
         }
+        bottom {
+            togglebutton("Hide edges") {
+                isSelected = false
+                action {
+                    text = if (isSelected) {
+                        for (edge in graphView.edges()) edge.hide()
+                        "Show edges"
+                    } else {
+                        for (edge in graphView.edges()) edge.show()
+                        "Hide edges"
+                    }
+                }
 
+            }
+        }
         left = vbox {
             titledpane("GRAPH") {
                 vbox(5) {
@@ -79,81 +93,59 @@ class MainView : View("Graph Application") {
 //                                    center.add(graphView)
 //                                    layout = Layout().applyForceAtlas2(graphView)
 //                                }
-//                            }
-//                        }
-                                SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
-                                    graphView = it
-                                    center.getChildList()!!.clear()
-                                    center.add(graphView)
-                                    layout = Layout().applyForceAtlas2(graphView)
-                                }
                             }
+                        }
+
+                        val sqliteButton = button()
+                        sqliteButton.text = "SQLite"
+                        sqliteButton.setOnMouseReleased {
+                            sqliteButton.isDisable = true
+                            hbox {
+                                val input = textfield()
+                                input.promptText = ("URI or ...")
+                                var data: String
+                                input.setOnKeyReleased { event ->
+                                    if (event.code == KeyCode.ENTER) {
+                                        data = input.text
+                                        hide()
+                                        sqliteButton.isDisable = false
+                                    }
+                                }
+//                                SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
+//                                    graphView = it
+//                                    center.getChildList()!!.clear()
+//                                    center.add(graphView)
+//                                    layout = Layout().applyForceAtlas2(graphView)
+//                                }
+                            }
+                        }
+                        button("Neo4j") {
+
                         }
                     }
 
-                    right {
-                        button("Export") {
+                    label("EXPORT")
+                    hbox(5) {
+                        button("JSON") {
+                            action {
+                                val window = Popup()
+                                val fileChooser = FileChooser()
+                                val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+                                fileChooser.extensionFilters.add(importFilter)
+                                fileChooser.title = "Save Graph"
+                                val file = fileChooser.showSaveDialog(window)
+                                file?.let {
+                                    FileLoader().saveGraph(graphView, file.path)
+                                }
+                            }
+                        }
+                        button("SQLite") {
                             action {
                                 SQLiteLoader().saveGraph(graphView, "saved.sqlite")
                             }
                         }
+                        button("Neo4j") {}
                     }
-                    bottom {
-                        togglebutton("Hide edges") {
-                            isSelected = false
-                            action {
-                                text = if (isSelected) {
-                                    for (edge in graphView.edges()) edge.hide()
-                                    "Show edges"
-                                } else {
-                                    for (edge in graphView.edges()) edge.show()
-                                    "Hide edges"
-                                }
-                            }
-
-                        }
-                    }
-
-
-//                        val r = button()
-//                        r.text = "SQLite"
-//                        r.setOnMouseReleased {
-//                            r.isDisable = true
-//                            hbox {
-//                                val input = textfield()
-//                                input.promptText = ("URI or ...")
-//                                var data: String
-//                                input.setOnKeyReleased { event ->
-//                                    if (event.code == KeyCode.ENTER) {
-//                                        data = input.text
-//                                        hide()
-//                                        r.isDisable = false
-//                                    }
-//                                }
-//                            }
-//                        }
-                    button("Neo4j") {
-
-                    }
-                }
-
-                label("EXPORT")
-                hbox(5) {
-                    button("JSON") {
-                        action {
-                            val window = Popup()
-                            val fileChooser = FileChooser()
-                            val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-                            fileChooser.extensionFilters.add(importFilter)
-                            fileChooser.title = "Save Graph"
-                            val file = fileChooser.showSaveDialog(window)
-                            file?.let {
-                                FileLoader().saveGraph(graphView, file.path)
-                            }
-                        }
-                    }
-                    button("SQLite") {}
-                    button("Neo4j") {}
                 }
             }
 
@@ -289,12 +281,12 @@ class MainView : View("Graph Application") {
         }
 
 
-
         style {
             backgroundColor += Color.AZURE
         }
     }
 }
+
 
 class ErrorWindow(text: String) : View() {
     override val root = stackpane {
@@ -302,3 +294,4 @@ class ErrorWindow(text: String) : View() {
         label(text)
     }
 }
+
