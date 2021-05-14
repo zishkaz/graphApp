@@ -8,7 +8,7 @@ import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 import java.util.*
 
-class Centrality : Controller() {
+object Centrality : Controller() {
 
     private data class ExtraVertexData(val vertID: String) {
         var previous: Vertex? = null
@@ -25,28 +25,17 @@ class Centrality : Controller() {
 
     fun applyHarmonicCentrality(graph: GraphView) {
         val vertices = graph.vertices()
-        val edges = graph.edges().map{it.edge}.toList()
-        val vert = graph.vertices().map{it.vertex}.toList()
+        val edges = graph.edges().map { it.edge }.toList()
+        val vert = graph.vertices().map { it.vertex }.toList()
         val verticesExtraData = hashMapOf<String, ExtraVertexData>()
         for (i in vert) {
             verticesExtraData[i.id] = ExtraVertexData(i.id)
         }
 
         setNeighbours(edges, verticesExtraData)
-
-        var max = 0.0
-        var min: Double = Double.MAX_VALUE
-
         for (i in vert) {
             i.centralityRang = setUpVertices(i, vert, verticesExtraData)
-            if (i.centralityRang.compareTo(min) < 0) min = i.centralityRang
-            if (i.centralityRang.compareTo(max) > 0) max = i.centralityRang
         }
-
-        val step1 = (max - min) / vert.size
-        val step2 = 255.0 / vert.size
-        setColor(step1, step2, min, vertices)
-        println("nice")
     }
 
     private fun setUpVertices(
@@ -89,12 +78,11 @@ class Centrality : Controller() {
         return sumOfShortestPaths
     }
 
-    private fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {
+    fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {
 
         for (v in vertices) {// SET COLORS
             val x = (v.vertex.centralityRang - min) / step1
             v.color = Color.rgb(100, 255 - (step2 * x).toInt(), 255)
         }
     }
-
 }

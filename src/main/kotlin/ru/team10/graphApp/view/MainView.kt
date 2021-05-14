@@ -1,5 +1,7 @@
 package ru.team10.graphApp.view
 
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
 import javafx.scene.control.Alert
 import javafx.scene.control.CheckBox
 import javafx.scene.control.TextField
@@ -8,9 +10,8 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.stage.FileChooser
 import javafx.stage.Popup
-import ru.team10.graphApp.controller.algorithms.Centrality
-import ru.team10.graphApp.controller.algorithms.Layout
-import ru.team10.graphApp.controller.algorithms.Leiden
+import ru.team10.graphApp.controller.algorithms.*
+import ru.team10.graphApp.controller.algorithms.colorAccordingToCommunity
 import ru.team10.graphApp.controller.algorithms.leidenResolution
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.Neo4jLoader
@@ -25,7 +26,7 @@ import tornadofx.*
 class MainView : View("Graph Application") {
     private var graphView = GraphView(Graph())
 
-    private val centrality = Centrality()
+    private val centrality = Centrality
     private var layoutAnim = Layout.applyForceAtlas2(graphView)
     private var barnesHutCheckbox = CheckBox()
     private var scalingTextField = TextField()
@@ -70,7 +71,7 @@ class MainView : View("Graph Application") {
             }
         }
         left = vbox {
-            titledpane("GRAPH") {
+            titledpane("Graph") {
                 this.isExpanded = false
                 vbox(5) {
                     label("IMPORT")
@@ -351,6 +352,15 @@ class MainView : View("Graph Application") {
                             }
                         }
                     }
+                    button("COLOR") {
+                        action {
+                            if (graphView.vertices().map {it.vertex.communityID}.contains(-1)) {
+                                alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
+                            } else {
+                                colorAccordingToCommunity(graphView)
+                            }
+                        }
+                    }
 
                 }
             }
@@ -387,6 +397,17 @@ class MainView : View("Graph Application") {
                             val file = fileChooser.showSaveDialog(window)
                             file?.let {
                                 buildCentralityReport(graphView, file)
+                            }
+                        }
+                    }
+                    button("COLOR") {
+                        action {
+                            if (graphView.vertices().map {it.vertex.centralityRang}.contains(-1.0)) {
+                                alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
+                            } else {
+                                val min = graphView.vertices().map {it.vertex.centralityRang}.minOrNull()
+                                val max = graphView.vertices().map {it.vertex.centralityRang}.maxOrNull()
+                                Centrality.setColor((max!! - min!!) / graphView.vertices().size, 255.0 / graphView.vertices().size, min, graphView.vertices())
                             }
                         }
                     }
@@ -438,6 +459,10 @@ class MainView : View("Graph Application") {
                                 "Hide edges"
                             }
                         }
+
+                    }
+                    label("Vertex color:")
+                    colorpicker {
 
                     }
                 }
