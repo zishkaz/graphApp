@@ -14,7 +14,7 @@ fun buildCommunityDetectionReport(graph: GraphView, file: File) {
     for (keys in communityIdToNodes.keys) {
         file.appendText("$keys:\n")
         for (id in communityIdToNodes[keys]!!) {
-            file.appendText("\tid\n")
+            file.appendText("\t$id\n")
         }
     }
 }
