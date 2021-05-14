@@ -5,14 +5,15 @@ import javafx.scene.shape.Circle
 import ru.team10.graphApp.model.Vertex
 import tornadofx.doubleProperty
 
-var radius = 4.0
+var vertexRadius = 4.0
+var vertexColor: Color = Color.AQUA
 
 class VertexView(
     val vertex: Vertex,
     x: Double = 0.0,
     y: Double = 0.0,
-    color: Color = Color.AQUA,
-) : Circle(x, y, radius, color) {
+    color: Color = vertexColor,
+) : Circle(x, y, vertexRadius, color) {
 
 
     init {

@@ -1,5 +1,6 @@
 package ru.team10.graphApp.controller.loader
 
+import javafx.scene.control.Alert
 import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
@@ -7,6 +8,8 @@ import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
+import tornadofx.Stylesheet.Companion.alert
+import tornadofx.alert
 import tornadofx.getDouble
 import tornadofx.loadJsonObject
 import java.io.File
@@ -23,21 +26,33 @@ class FileLoader : GraphLoader, Controller() {
         val vertices = json.getJsonArray("vertices")?.map {
             val jsonObject = it.asJsonObject()
             val id =
-                if (jsonObject.containsKey("id")) jsonObject.getString("id") else return null //@pionep change it to error
+                if (jsonObject.containsKey("id")) jsonObject.getString("id") else {
+                    alert(Alert.AlertType.ERROR, "ERROR!\nVertex doesn't have id!")
+                    return null
+                }
             val communityID = if (jsonObject.containsKey("communityID")) jsonObject.getInt("communityID") else -1
             val centralityRang =
                 if (jsonObject.containsKey("centralityRang")) jsonObject.getDouble("centralityRang") else -1.0
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(1000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(1000.0)
             val vertex = Vertex(id, centralityRang, communityID)
-            VertexView(vertex, posX, posY, Color.AQUA)
-        } ?: throw NoSuchFieldException("Empty graph can't be loaded!") //@pionep change it to error
+            VertexView(vertex, posX, posY)
+        } ?: run {
+            alert(Alert.AlertType.ERROR, "ERROR!\nEmpty graph can't be loaded!")
+            return null
+        }
         val edges = json.getJsonArray("edges")?.map {
             val jsonObject = it.asJsonObject()
             val first = jsonObject.getInt("first")
-            if (first < 0 || first >= vertices.size) return null //@pionep change it to error
+            if (first < 0 || first >= vertices.size) {
+                alert(Alert.AlertType.ERROR, "ERROR\nWrong edge first node number!")
+                return null
+            }
             val second = jsonObject.getInt("second")
-            if (second >= vertices.size || second < 0) return null //@pionep change it to error
+            if (second >= vertices.size || second < 0) {
+                alert(Alert.AlertType.ERROR, "ERROR\nWrong edge second node number!")
+                return null
+            }
             val weight = if (jsonObject.containsKey("weight")) jsonObject.getDouble("weight") else 1.0
             Edge(vertices[first].vertex, vertices[second].vertex, weight)
         }

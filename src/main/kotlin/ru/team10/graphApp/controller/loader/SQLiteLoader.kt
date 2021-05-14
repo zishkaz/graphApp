@@ -1,11 +1,13 @@
 package ru.team10.graphApp.controller.loader
 
+import javafx.scene.control.Alert
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
+import tornadofx.alert
 import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.random.Random
@@ -36,7 +38,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 vertices.add(vertexView)
             }
         } catch (e: Exception) {
-            //Error that vertices couldn't be read
+            alert(Alert.AlertType.ERROR, "ERROR\nVertices can't be read from a specified database!")
             return null
         }
         try {
@@ -52,7 +54,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 edges.add(edge)
             }
         } catch (e: Exception) {
-            //Error that edges couldn't be read
+            alert(Alert.AlertType.ERROR, "ERROR\nEdges can't be read from a specified database!")
             return null
         }
         val graph = Graph()
@@ -70,7 +72,8 @@ class SQLiteLoader : GraphLoader, Controller() {
                 it.execute("CREATE TABLE vertices(num INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL, posX DOUBLE, posY DOUBLE, centralityRang DOUBLE, communityID INTEGER);")
                 it.execute("CREATE TABLE edges(edgeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, first INTEGER NOT NULL, second INTEGER NOT NULL, weight DOUBLE);")
             } catch (e: Exception) {
-                //Error that couldn't create a database
+                alert(Alert.AlertType.ERROR, "ERROR\nCouldn't create tables!")
+                return
             }
         }
         val vertexToNumber = hashMapOf<VertexView, Int>()
@@ -80,7 +83,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 try {
                     it.execute("INSERT INTO vertices (id, posX, posY, centralityRang, communityID) VALUES ('${node.vertex.id}', ${node.centerX},${node.centerY}, ${if (node.vertex.centralityRang != -1.0) node.vertex.centralityRang else null}, ${if (node.vertex.communityID != -1) node.vertex.communityID else null});")
                 } catch (e: Exception) {
-                    //Error that couldn't add vertices to a database
+                    alert(Alert.AlertType.ERROR, "ERROR\nVertices can't be added to a specified database!")
                     it.execute("DROP TABLE vertices")
                 }
             }
@@ -102,7 +105,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                         }, ${if (edge.edge.weight != 1.0) edge.edge.weight else null});"
                     )
                 } catch (e: Exception) {
-                    //Error that couldn't add edges to a database
+                    alert(Alert.AlertType.ERROR, "ERROR\nEdges can't be added to a specified database!")
                     it.execute("DROP TABLE vertices")
                     it.execute("DROP TABLE edges")
                 }

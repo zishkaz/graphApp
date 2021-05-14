@@ -12,23 +12,24 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 private const val antiCollisionCoeff = 100.0
-internal var scaling = 1000.0
-internal var gravity = 0.1
-internal var jitterTolerance = 0.1
 private const val minSpeedEfficiency = 0.05
 private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
 private const val barnesHutTheta = 1.2
-var isBarnesHutActive = false
 
-class Layout : Controller() {
+object Layout : Controller() {
+
+    internal var scaling = 1000.0
+    internal var gravity = 0.1
+    internal var jitterTolerance = 0.1
+    internal var isBarnesHutActive = false
 
     private val dx = hashMapOf<VertexView, Double>()
     private val dy = hashMapOf<VertexView, Double>()
     private val dxOld = hashMapOf<VertexView, Double>()
     private val dyOld = hashMapOf<VertexView, Double>()
 
-    inner class Anim(private val graph: GraphView) : AnimationTimer() {
+    class Anim(private val graph: GraphView) : AnimationTimer() {
 
         override fun handle(now: Long) {
 
