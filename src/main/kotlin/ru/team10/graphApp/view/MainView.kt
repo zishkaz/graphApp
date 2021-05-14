@@ -348,12 +348,19 @@ class MainView : View("Graph Application") {
                     val e = button()
                     e.text("RESULT")
                     e.setOnMouseReleased {
-                        //e.isDisable = true
-                        scrollpane {
+                        e.isDisable = true
+                        val h = button()
+                        val s = scrollpane(true, true) {
                             textflow {
-                                for (v in graphView.vertices().map{it.vertex})
+                                for (v in graphView.vertices().map { it.vertex })
                                     text("ID: ${v.id} ----\n community ID: ${v.communityID}\n")
                             }
+                        }
+                        h.text = ("HIDE RESULT")
+                        h.setOnMouseReleased {
+                            s.hide()
+                            h.hide()
+                            e.isDisable = false
                         }
                     }
                     button("SAVE") {
@@ -372,7 +379,7 @@ class MainView : View("Graph Application") {
                     }
                     button("COLOR") {
                         action {
-                            if (graphView.vertices().map {it.vertex.communityID}.contains(-1)) {
+                            if (graphView.vertices().map { it.vertex.communityID }.contains(-1)) {
                                 alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
                             } else {
                                colorAccordingToCommunity(graphView)
@@ -384,24 +391,31 @@ class MainView : View("Graph Application") {
             }
             titledpane("Centrality") {
                 this.isExpanded = false
-                button("START"){
-                    action{
-                        runAsync{
-                            centrality.applyHarmonicCentrality(graphView)
+                vbox(10) {
+                    button("START") {
+                        action {
+                            runAsync {
+                                centrality.applyHarmonicCentrality(graphView)
+                            }
                         }
                     }
-                }
-                vbox(10) {
+
                     val e = button()
                     e.text("RESULT")
                     e.setOnMouseReleased {
-
-                        //e.isDisable = true
-                        scrollpane {
+                        e.isDisable = true
+                        val h = button()
+                        val s = scrollpane(true, true) {
                             textflow {
-                                for (v in graphView.vertices().map{it.vertex}.sortedByDescending { it.centralityRang })
+                                for (v in graphView.vertices().map { it.vertex })
                                     text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
                             }
+                        }
+                        h.text = ("HIDE RESULT")
+                        h.setOnMouseReleased {
+                            s.hide()
+                            h.hide()
+                            e.isDisable = false
                         }
                     }
                     button("SAVE") {
@@ -420,15 +434,21 @@ class MainView : View("Graph Application") {
                     }
                     button("COLOR") {
                         action {
-                            if (graphView.vertices().map {it.vertex.centralityRang}.contains(-1.0)) {
+                            if (graphView.vertices().map { it.vertex.centralityRang }.contains(-1.0)) {
                                 alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
                             } else {
-                                val min = graphView.vertices().map {it.vertex.centralityRang}.minOrNull()
-                                val max = graphView.vertices().map {it.vertex.centralityRang}.maxOrNull()
-                                Centrality.setColor((max!! - min!!) / graphView.vertices().size, 255.0 / graphView.vertices().size, min, graphView.vertices())
+                                val min = graphView.vertices().map { it.vertex.centralityRang }.minOrNull()
+                                val max = graphView.vertices().map { it.vertex.centralityRang }.maxOrNull()
+                                Centrality.setColor(
+                                    (max!! - min!!) / graphView.vertices().size,
+                                    255.0 / graphView.vertices().size,
+                                    min,
+                                    graphView.vertices()
+                                )
                             }
                         }
                     }
+
 
                 }
             }
@@ -481,8 +501,9 @@ class MainView : View("Graph Application") {
 
                     }
                     label("Vertex color:")
-                    colorpicker {
-
+                    val q = colorpicker()
+                    q.setOnHiding {
+                        for (v in graphView.vertices()) v.color = q.value
                     }
                 }
             }
