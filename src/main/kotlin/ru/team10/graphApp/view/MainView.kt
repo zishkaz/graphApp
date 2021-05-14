@@ -42,7 +42,6 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layoutAnim.start()
-//               centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -51,7 +50,6 @@ class MainView : View("Graph Application") {
             currentStage?.apply {
 
                 layoutAnim.stop()
-//                centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
 
@@ -334,7 +332,7 @@ class MainView : View("Graph Application") {
                         //e.isDisable = true
                         scrollpane {
                             textflow {
-                                for (v in Graph().vertices())
+                                for (v in graphView.vertices().map{it.vertex})
                                     text("ID: ${v.id} ----\n community ID: ${v.communityID}\n")
                             }
                         }
@@ -361,7 +359,7 @@ class MainView : View("Graph Application") {
                 button("START"){
                     action{
                         runAsync{
-                            centrality.applyHarmonicCentrality(graphView, graphView.vertices())
+                            centrality.applyHarmonicCentrality(graphView)
                         }
                     }
                 }
@@ -369,10 +367,11 @@ class MainView : View("Graph Application") {
                     val e = button()
                     e.text("RESULT")
                     e.setOnMouseReleased {
+
                         //e.isDisable = true
                         scrollpane {
                             textflow {
-                                for (v in Graph().vertices())
+                                for (v in graphView.vertices().map{it.vertex})
                                     text("ID: ${v.id} ----\n rank: ${v.centralityRang}\n")
                             }
                         }
