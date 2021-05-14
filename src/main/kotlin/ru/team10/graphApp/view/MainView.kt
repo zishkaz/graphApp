@@ -11,6 +11,7 @@ import javafx.stage.Popup
 import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.algorithms.Layout
 import ru.team10.graphApp.controller.algorithms.Leiden
+import ru.team10.graphApp.controller.algorithms.leidenResolution
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.Neo4jLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
@@ -21,18 +22,18 @@ import ru.team10.graphApp.utils.loadConfigFile
 import ru.team10.graphApp.utils.saveConfig
 import tornadofx.*
 
-private var graphFilename: String? = "src/input.txt"
-private lateinit var leiden: Leiden
-
 class MainView : View("Graph Application") {
-
     private var graphView = GraphView(Graph())
+
     private val centrality = Centrality()
     private var layoutAnim = Layout.applyForceAtlas2(graphView)
     private var barnesHutCheckbox = CheckBox()
     private var scalingTextField = TextField()
     private var gravityTextField = TextField()
     private var jitterTextField = TextField()
+
+    private var graphFilename: String? = "src/input.txt"
+
 
     override val root = borderpane {
         this.stylesheets.add("1.css")
@@ -318,10 +319,11 @@ class MainView : View("Graph Application") {
                 vbox(10) {
                     button("Start Leiden algorithm") {
                         action {
+                            lateinit var leiden: Leiden
                             runAsync {
                                 graphFilename?.let {
                                     leiden = Leiden(it, "src/output.txt")
-                                    leiden.startLeiden(0.2)
+                                    leiden.startLeiden(leidenResolution)
                                 }
                             }
                         }

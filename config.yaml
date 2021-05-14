@@ -12,4 +12,4 @@ layoutConstants:
   isBarnesHutActive: false
 
 communityDetectionConstants:
-  kek: 1.0
+  resolution: 1.0

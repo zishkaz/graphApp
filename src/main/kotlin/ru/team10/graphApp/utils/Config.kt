@@ -5,6 +5,7 @@ import javafx.scene.control.Alert
 import javafx.scene.paint.Color
 import org.yaml.snakeyaml.Yaml
 import ru.team10.graphApp.controller.algorithms.Layout
+import ru.team10.graphApp.controller.algorithms.leidenResolution
 import ru.team10.graphApp.view.vertexColor
 import ru.team10.graphApp.view.vertexRadius
 import tornadofx.alert
@@ -20,7 +21,7 @@ data class LayoutConstants(
     val isBarnesHutActive: Boolean
 )
 
-data class CommunityDetectionConstants(val kek: Double)
+data class CommunityDetectionConstants(val resolution: Double)
 
 data class Config(
     val vertexColor: VertexColor,
@@ -38,6 +39,7 @@ fun loadConfigFile(file: File) {
         e.printStackTrace()
         return
     }
+    leidenResolution = config.communityDetectionConstants.resolution
     vertexRadius = config.vertexRadius
     Layout.jitterTolerance = config.layoutConstants.jitterTolerance
     Layout.gravity = config.layoutConstants.gravity
@@ -63,7 +65,7 @@ fun saveConfig(file: File) {
     layoutConstantsMap["isBarnesHutActive"] = Layout.isBarnesHutActive
     generalMap["layoutConstants"] = layoutConstantsMap
     val communityDetectionConstantsMap = hashMapOf<String, Any>()
-    communityDetectionConstantsMap["kek"] = 1.0
+    communityDetectionConstantsMap["resolution"] = leidenResolution
     generalMap["communityDetectionConstants"] = communityDetectionConstantsMap
     val writer = StringWriter()
     yaml.dump(generalMap, writer)
