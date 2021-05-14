@@ -69,24 +69,9 @@ class MainView : View("Graph Application") {
                 }
             }
         }
-        //Вот эта фигня не тут должна быть
-        bottom {
-            togglebutton("Hide edges") {
-                isSelected = false
-                action {
-                    text = if (isSelected) {
-                        for (edge in graphView.edges()) edge.hide()
-                        "Show edges"
-                    } else {
-                        for (edge in graphView.edges()) edge.show()
-                        "Hide edges"
-                    }
-                }
-
-            }
-        }
         left = vbox {
             titledpane("GRAPH") {
+                this.isExpanded = false
                 vbox(5) {
                     label("IMPORT")
                     hbox(5) {
@@ -132,9 +117,40 @@ class MainView : View("Graph Application") {
                                 }
                             }
                         }
-                        button("Neo4j") {
+                        val neo4jButton = button()
+                        neo4jButton.text = ("Neo4j")
+                        neo4jButton.setOnMouseReleased {
+                            neo4jButton.isDisable = true
+                            vbox(5) {
+                                var data = String()
 
+                                label("URI")
+                                val uri = textfield()
+
+                                label("Udername")
+                                val username = textfield()
+
+                                label("Password")
+                                val password = textfield()
+
+                                val k = button()
+                                k.text = "OK"
+                                k.setOnMouseReleased {
+                                    if (uri.text.isBlank() || username.text.isBlank() || password.text.isBlank()) {
+                                        alert(
+                                            Alert.AlertType.WARNING,
+                                            "You have forgotten write in port or login or password!"
+                                        )
+                                    }
+                                    data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
+                                    println(data)
+                                    hide()
+                                    neo4jButton.isDisable = false
+                                }
+
+                            }
                         }
+
                     }
 
                     label("EXPORT")
@@ -170,12 +186,44 @@ class MainView : View("Graph Application") {
                                 }
                             }
                         }
-                        button("Neo4j") {}
+                        val neo4jButton = button()
+                        neo4jButton.text = ("Neo4j")
+                        neo4jButton.setOnMouseReleased {
+                            neo4jButton.isDisable = true
+                            vbox(5) {
+                                var data = String()
+
+                                label("URI")
+                                val uri = textfield()
+
+                                label("Username")
+                                val username = textfield()
+
+                                label("Password")
+                                val password = textfield()
+
+                                val k = button()
+                                k.text = "OK"
+                                k.setOnMouseReleased {
+                                    if (uri.text.isBlank() || username.text.isBlank() || password.text.isBlank()) {
+                                        alert(
+                                            Alert.AlertType.WARNING,
+                                            "You have forgotten write in port or login or password!"
+                                        )
+                                    }
+                                    data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
+                                    println(data)
+                                    hide()
+                                    neo4jButton.isDisable = false
+                                }
+
+                            }
+                        }
                     }
                 }
             }
-
-            titledpane("LAYOUT") {
+            titledpane("Layout") {
+                this.isExpanded = false
                 vbox(5) {
                     val kek = togglebutton("START") {
                         this.isSelected = false
@@ -260,6 +308,7 @@ class MainView : View("Graph Application") {
                 }
             }
             titledpane("Community") {
+                this.isExpanded = false
                 vbox(10) {
                     button("Start Leiden algorithm") {
                         action {
@@ -300,7 +349,7 @@ class MainView : View("Graph Application") {
                 }
             }
             titledpane("Centrality") {
-
+                this.isExpanded = false
                 vbox(10) {
                     val e = button()
                     e.text("RESULT")
@@ -331,6 +380,7 @@ class MainView : View("Graph Application") {
                 }
             }
             titledpane("Settings") {
+                this.isExpanded = false
                 vbox(10) {
                     button("Load configuration file") {
                         action {
@@ -363,6 +413,19 @@ class MainView : View("Graph Application") {
                             }
                         }
                     }
+                    togglebutton("Hide edges") {
+                        isSelected = false
+                        action {
+                            text = if (isSelected) {
+                                for (edge in graphView.edges()) edge.hide()
+                                "Show edges"
+                            } else {
+                                for (edge in graphView.edges()) edge.show()
+                                "Hide edges"
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -381,4 +444,3 @@ class ErrorWindow(text: String) : View() {
         label(text)
     }
 }
-
