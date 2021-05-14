@@ -17,7 +17,7 @@ private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
 private const val barnesHutTheta = 1.2
 
-class Layout : Controller() {
+object Layout : Controller() {
 
     internal var scaling = 1000.0
     internal var gravity = 0.1
@@ -29,7 +29,7 @@ class Layout : Controller() {
     private val dxOld = hashMapOf<VertexView, Double>()
     private val dyOld = hashMapOf<VertexView, Double>()
 
-    inner class Anim(private val graph: GraphView) : AnimationTimer() {
+    class Anim(private val graph: GraphView) : AnimationTimer() {
 
         override fun handle(now: Long) {
 

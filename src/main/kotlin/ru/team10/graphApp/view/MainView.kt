@@ -1,6 +1,8 @@
 package ru.team10.graphApp.view
 
 import javafx.scene.control.Alert
+import javafx.scene.control.CheckBox
+import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -12,6 +14,8 @@ import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
 import ru.team10.graphApp.model.Graph
+import ru.team10.graphApp.utils.loadConfigFile
+import ru.team10.graphApp.utils.saveConfig
 import tornadofx.*
 
 private var graphFilename: String? = "src/input.txt"
@@ -21,7 +25,11 @@ class MainView : View("Graph Application") {
 
     private var graphView = GraphView(Graph())
     private val centrality = Centrality()
-    private var layout = Layout().applyForceAtlas2(graphView)
+    private var layoutAnim = Layout.applyForceAtlas2(graphView)
+    private var barnesHutCheckbox = CheckBox()
+    private var scalingTextField = TextField()
+    private var gravityTextField = TextField()
+    private var jitterTextField = TextField()
 
     override val root = borderpane {
         this.stylesheets.add("1.css")
@@ -29,7 +37,7 @@ class MainView : View("Graph Application") {
 
             currentStage?.apply {
 
-                layout.start()
+                layoutAnim.start()
 //               centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
@@ -38,7 +46,7 @@ class MainView : View("Graph Application") {
 
             currentStage?.apply {
 
-                layout.stop()
+                layoutAnim.stop()
 //                centrality.applyHarmonicCentrality(props.sample, graphView.vertices())
             }
         }
@@ -59,6 +67,7 @@ class MainView : View("Graph Application") {
                 }
             }
         }
+        //Вот эта фигня не тут должна быть
         bottom {
             togglebutton("Hide edges") {
                 isSelected = false
@@ -81,18 +90,20 @@ class MainView : View("Graph Application") {
                     hbox(5) {
                         button("JSON") {
                             action {
-//                                val window = Popup()
-//                                val fileChooser = FileChooser()
-//                                val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-//                                fileChooser.extensionFilters.add(importFilter)
-//                                fileChooser.title = "Open Resource File"
-//                                val file = fileChooser.showOpenDialog(window)
-//                                file?.let {
-//                                    graphView = FileLoader().loadGraph(file.path)
-//                                    center.getChildList()!!.clear()
-//                                    center.add(graphView)
-//                                    layout = Layout().applyForceAtlas2(graphView)
-//                                }
+                                val window = Popup()
+                                val fileChooser = FileChooser()
+                                val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+                                fileChooser.extensionFilters.add(importFilter)
+                                fileChooser.title = "Open Resource File"
+                                val file = fileChooser.showOpenDialog(window)
+                                file?.let {
+                                    FileLoader().loadGraph(file.path)?.let {
+                                        graphView = it
+                                        center.getChildList()!!.clear()
+                                        center.add(graphView)
+                                        layoutAnim = Layout.applyForceAtlas2(graphView)
+                                    }
+                                }
                             }
                         }
 
@@ -102,21 +113,21 @@ class MainView : View("Graph Application") {
                             sqliteButton.isDisable = true
                             hbox {
                                 val input = textfield()
-                                input.promptText = ("URI or ...")
+                                input.promptText = ("Enter URI")
                                 var data: String
                                 input.setOnKeyReleased { event ->
                                     if (event.code == KeyCode.ENTER) {
                                         data = input.text
+                                        SQLiteLoader().loadGraph(data)?.let {
+                                            graphView = it
+                                            center.getChildList()!!.clear()
+                                            center.add(graphView)
+                                            layoutAnim = Layout.applyForceAtlas2(graphView)
+                                        }
                                         hide()
                                         sqliteButton.isDisable = false
                                     }
                                 }
-//                                SQLiteLoader().loadGraph("D:\\Dev\\graphApp\\identifier.sqlite")?.let {
-//                                    graphView = it
-//                                    center.getChildList()!!.clear()
-//                                    center.add(graphView)
-//                                    layout = Layout().applyForceAtlas2(graphView)
-//                                }
                             }
                         }
                         button("Neo4j") {
@@ -139,9 +150,22 @@ class MainView : View("Graph Application") {
                                 }
                             }
                         }
-                        button("SQLite") {
-                            action {
-                                SQLiteLoader().saveGraph(graphView, "saved.sqlite")
+                        val sqliteButton = button()
+                        sqliteButton.text = "SQLite"
+                        sqliteButton.setOnMouseReleased {
+                            sqliteButton.isDisable = true
+                            hbox {
+                                val input = textfield()
+                                input.promptText = ("Enter URI")
+                                var data: String
+                                input.setOnKeyReleased { event ->
+                                    if (event.code == KeyCode.ENTER) {
+                                        data = input.text
+                                        SQLiteLoader().saveGraph(graphView, data)
+                                        hide()
+                                        sqliteButton.isDisable = false
+                                    }
+                                }
                             }
                         }
                         button("Neo4j") {}
@@ -168,17 +192,18 @@ class MainView : View("Graph Application") {
                         }
                     }
                     label("Scaling")
-                    textfield {
-                        this.promptText = " = ${Layout().scaling}"
+                    scalingTextField = textfield {
+                        this.promptText = " = ${Layout.scaling}"
                         filterInput { it.controlNewText.isDouble() }
                         this.setOnKeyReleased { event ->
                             if (event.code == KeyCode.ENTER) {
                                 if (this.text == null || this.text.trim().isBlank()) {
-                                    alert(Alert.AlertType.WARNING, "Please, input Scaling constant !")
+                                    alert(Alert.AlertType.WARNING, "Please, input Scaling constant!")
                                 } else if (this.text.toDouble() <= 0.0) {
-                                    alert(Alert.AlertType.WARNING, "Scaling constant must be positive !")
+                                    alert(Alert.AlertType.WARNING, "Scaling constant must be positive!")
                                 } else {
-                                    Layout().scaling = this.text.toDouble()
+                                    text = text.toDouble().toString()
+                                    Layout.scaling = this.text.toDouble()
                                     this.parent.requestFocus()
                                 }
                             }
@@ -186,17 +211,18 @@ class MainView : View("Graph Application") {
                     }
 
                     label("Gravity")
-                    textfield {
-                        this.promptText = " = ${Layout().gravity}"
+                    gravityTextField = textfield {
+                        this.promptText = " = ${Layout.gravity}"
                         filterInput { it.controlNewText.isDouble() }
                         this.setOnKeyReleased { event ->
                             if (event.code == KeyCode.ENTER) {
                                 if (this.text == null || this.text.trim().isBlank()) {
-                                    alert(Alert.AlertType.WARNING, "Please, input Gravity constant !")
+                                    alert(Alert.AlertType.WARNING, "Please, input Gravity constant!")
                                 } else if (this.text.toDouble() < 0.0) {
-                                    alert(Alert.AlertType.WARNING, "Gravity constant must be not negative !")
+                                    alert(Alert.AlertType.WARNING, "Gravity constant must be not negative!")
                                 } else {
-                                    Layout().gravity = this.text.toDouble()
+                                    text = text.toDouble().toString()
+                                    Layout.gravity = this.text.toDouble()
                                     this.parent.requestFocus()
                                 }
                             }
@@ -204,9 +230,29 @@ class MainView : View("Graph Application") {
 
                     }
 
-                    checkbox("BarnesHut optimisation") {
+                    label("Jitter tolerance")
+                    jitterTextField = textfield {
+                        this.promptText = " = ${Layout.jitterTolerance}"
+                        filterInput { it.controlNewText.isDouble() }
+                        this.setOnKeyReleased { event ->
+                            if (event.code == KeyCode.ENTER) {
+                                if (this.text == null || this.text.trim().isBlank()) {
+                                    alert(Alert.AlertType.WARNING, "Please, input Jitter tolerance constant!")
+                                } else if (this.text.toDouble() < 0.0) {
+                                    alert(Alert.AlertType.WARNING, "Jitter tolerance constant must be not negative!")
+                                } else {
+                                    text = text.toDouble().toString()
+                                    Layout.jitterTolerance = this.text.toDouble()
+                                    this.parent.requestFocus()
+                                }
+                            }
+                        }
+
+                    }
+
+                    barnesHutCheckbox = checkbox("BarnesHut optimisation") {
                         action {
-                            Layout().isBarnesHutActive = isSelected
+                            Layout.isBarnesHutActive = isSelected
                         }
                     }
                 }
@@ -276,6 +322,41 @@ class MainView : View("Graph Application") {
                         }
                     }
 
+                }
+            }
+            titledpane("Settings") {
+                vbox(10) {
+                    button("Load configuration file") {
+                        action {
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter = FileChooser.ExtensionFilter("Configuration file (*.yaml)", "*.yaml")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Open Configuration File"
+                            val file = fileChooser.showOpenDialog(window)
+                            file?.let {
+                                loadConfigFile(file)
+                                barnesHutCheckbox.isSelected = Layout.isBarnesHutActive
+                                scalingTextField.text = "${Layout.scaling}"
+                                gravityTextField.text = "${Layout.gravity}"
+                                jitterTextField.text = "${Layout.jitterTolerance}"
+                            }
+                        }
+                    }
+
+                    button("Save configuration file") {
+                        action {
+                            val window = Popup()
+                            val fileChooser = FileChooser()
+                            val importFilter = FileChooser.ExtensionFilter("Configuration file (*.yaml)", "*.yaml")
+                            fileChooser.extensionFilters.add(importFilter)
+                            fileChooser.title = "Save Configuration File"
+                            val file = fileChooser.showSaveDialog(window)
+                            file?.let {
+                                saveConfig(file)
+                            }
+                        }
+                    }
                 }
             }
         }

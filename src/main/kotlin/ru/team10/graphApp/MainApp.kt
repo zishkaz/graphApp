@@ -1,5 +1,6 @@
 package ru.team10.graphApp
 
+import javafx.scene.paint.Color
 import javafx.stage.Stage
 import ru.team10.graphApp.view.MainView
 import tornadofx.App
