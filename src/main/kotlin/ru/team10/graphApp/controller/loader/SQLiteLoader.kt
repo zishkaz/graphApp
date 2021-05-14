@@ -81,7 +81,13 @@ class SQLiteLoader : GraphLoader, Controller() {
             vertexToNumber[node] = vertexToNumber.size
             connection.createStatement().also {
                 try {
-                    it.execute("INSERT INTO vertices (id, posX, posY, centralityRang, communityID) VALUES ('${node.vertex.id}', ${node.centerX},${node.centerY}, ${if (node.vertex.centralityRang != -1.0) node.vertex.centralityRang else null}, ${if (node.vertex.communityID != -1) node.vertex.communityID else null});")
+                    it.execute(
+                        "INSERT INTO vertices (id, posX, posY, centralityRang, communityID) VALUES ('${
+                            node.vertex.id
+                        }', ${node.centerX},${node.centerY}, ${
+                            if (node.vertex.centralityRang != -1.0) node.vertex.centralityRang else null
+                        }, ${if (node.vertex.communityID != -1) node.vertex.communityID else null});"
+                    )
                 } catch (e: Exception) {
                     alert(Alert.AlertType.ERROR, "ERROR\nVertices can't be added to a specified database!")
                     it.execute("DROP TABLE vertices")

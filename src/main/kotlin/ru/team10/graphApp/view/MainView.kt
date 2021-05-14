@@ -14,6 +14,8 @@ import ru.team10.graphApp.controller.algorithms.Leiden
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
 import ru.team10.graphApp.model.Graph
+import ru.team10.graphApp.utils.buildCentralityReport
+import ru.team10.graphApp.utils.buildCommunityDetectionReport
 import ru.team10.graphApp.utils.loadConfigFile
 import ru.team10.graphApp.utils.saveConfig
 import tornadofx.*
@@ -289,7 +291,9 @@ class MainView : View("Graph Application") {
                             fileChooser.extensionFilters.add(importFilter)
                             fileChooser.title = "Save result"
                             val file = fileChooser.showSaveDialog(window)
-                            file?.let {}
+                            file?.let {
+                                buildCommunityDetectionReport(graphView, file)
+                            }
                         }
                     }
 
@@ -318,7 +322,9 @@ class MainView : View("Graph Application") {
                             fileChooser.extensionFilters.add(importFilter)
                             fileChooser.title = "Save result"
                             val file = fileChooser.showSaveDialog(window)
-                            file?.let {}
+                            file?.let {
+                                buildCentralityReport(graphView, file)
+                            }
                         }
                     }
 
