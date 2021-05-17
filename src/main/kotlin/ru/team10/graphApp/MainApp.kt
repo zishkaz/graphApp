@@ -16,10 +16,7 @@ class MainApp : App(MainView::class) {
             height = 720.0
         }
         super.start(stage)
-//        genereateFullGraph()
         //started
-//        stage.widthProperty().addListener { _, _, _ -> run { stage.centerOnScreen() } }
-//        stage.heightProperty().addListener { _, _, _ -> run {stage.centerOnScreen()} }
     }
 }
 

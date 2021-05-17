@@ -38,6 +38,7 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
         vertices().forEach {
 
             add(it)
+            add(it.st)
         }
     }
 }

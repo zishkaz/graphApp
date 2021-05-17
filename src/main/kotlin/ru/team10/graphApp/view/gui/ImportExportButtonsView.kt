@@ -1,4 +1,4 @@
-package ru.team10.graphApp.view
+package ru.team10.graphApp.view.gui
 
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
@@ -8,6 +8,7 @@ import javafx.stage.Popup
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.Neo4jLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
+import ru.team10.graphApp.view.graphView
 import tornadofx.*
 
 fun Button.createJsonImportButton(op: () -> Unit) {
