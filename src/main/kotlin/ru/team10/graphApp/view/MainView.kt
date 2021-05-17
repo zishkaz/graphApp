@@ -8,6 +8,7 @@ import javafx.scene.control.ToggleButton
 import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
+import ru.team10.graphApp.controller.GraphZoomDragController
 import ru.team10.graphApp.controller.algorithms.Layout
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.view.gui.*
@@ -45,6 +46,17 @@ internal class MainView : View("Graph Application") {
 
     override val root = borderpane {
         stylesheets.add("1.css")
+
+        val controller = GraphZoomDragController(graphView)
+        this.setOnScroll {
+            controller.scroll(it, graphView)
+        }
+        this.setOnMousePressed {
+            controller.pressed(it)
+        }
+        this.setOnMouseDragged {
+            controller.pressed(it, graphView)
+        }
 
         center {
             add(graphView)

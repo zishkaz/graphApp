@@ -18,8 +18,10 @@ class VertexView(
     color: Color = vertexColor,
 ) : Circle(x, y, vertexRadius.value, color) {
 
+    var radiusSummand: SimpleDoubleProperty = SimpleDoubleProperty(0.0)
+
     init {
-        radiusProperty().bind(vertexRadius)
+        radiusProperty().bind(vertexRadius + radiusSummand)
     }
 
     var position: Pair<Double, Double>

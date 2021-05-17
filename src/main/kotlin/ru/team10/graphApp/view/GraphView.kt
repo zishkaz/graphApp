@@ -1,6 +1,7 @@
 package ru.team10.graphApp.view
 
 import javafx.scene.layout.Pane
+import ru.team10.graphApp.controller.VertexController
 import ru.team10.graphApp.model.Graph
 import tornadofx.add
 
@@ -30,15 +31,22 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
 
     fun edges(): Collection<EdgeView> = edges.values
 
+    private val controller = VertexController()
+
     init {
         edges().forEach {
 
             add(it)
         }
-        vertices().forEach {
+        vertices().forEach { v ->
 
-            add(it)
-            add(it.st)
+            v.setOnMouseEntered { e -> e?.let { controller.entered(it) } }
+            v.setOnMousePressed { e -> e?.let { controller.pressed(it) } }
+            v.setOnMouseReleased { e -> e?.let { controller.released(it) } }
+            v.setOnMouseExited { e -> e?.let { controller.exited(it) } }
+
+            add(v)
+            add(v.st)
         }
     }
 }

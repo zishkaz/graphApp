@@ -5,6 +5,7 @@ import javafx.scene.control.Button
 import javafx.scene.input.KeyCode
 import javafx.stage.FileChooser
 import javafx.stage.Popup
+import ru.team10.graphApp.controller.algorithms.Centrality
 import ru.team10.graphApp.controller.loader.FileLoader
 import ru.team10.graphApp.controller.loader.Neo4jLoader
 import ru.team10.graphApp.controller.loader.SQLiteLoader
@@ -22,6 +23,7 @@ fun Button.createJsonImportButton(op: () -> Unit) {
         val file = fileChooser.showOpenDialog(window)
         file?.let {
             FileLoader().loadGraph(file.path)?.let {
+                Centrality.wasDone = false
                 graphView = it
                 op()
             }

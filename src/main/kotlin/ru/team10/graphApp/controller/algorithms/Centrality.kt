@@ -1,19 +1,23 @@
 package ru.team10.graphApp.controller.algorithms
 
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
+import ru.team10.graphApp.view.vertexRadius
 import tornadofx.Controller
 import java.util.*
 
 object Centrality : Controller() {
 
+    var wasDone = false
+    //var progress = SimpleBooleanProperty(false)
+
     private data class ExtraVertexData(val vertID: String) {
         var previous: Vertex? = null
         var neighbours = HashMap<Vertex, Double>()
-
     }
 
     private fun setNeighbours(edges: List<Edge>, verticesExtraData: HashMap<String, ExtraVertexData>) {
@@ -25,7 +29,7 @@ object Centrality : Controller() {
     }
 
     fun applyHarmonicCentrality(graph: GraphView) {
-
+        //progress.value = true
         val edges = graph.edges().map { it.edge }.toList()
         val vert = graph.vertices().map { it.vertex }.toList()
         val verticesExtraData = hashMapOf<String, ExtraVertexData>()
@@ -36,6 +40,10 @@ object Centrality : Controller() {
         for (i in vert) {
             i.centralityRang = setUpVertices(i, vert, verticesExtraData)
         }
+        if (!wasDone) setRadius(graph)
+
+        wasDone = true
+        //progress.value = false
     }
 
     private fun setUpVertices(
@@ -74,6 +82,18 @@ object Centrality : Controller() {
         }
         return sumOfShortestPaths
     }
+
+    fun setRadius(graph: GraphView) {
+        val min = graph.vertices().map { it.vertex.centralityRang }.minOrNull()
+        val max = graph.vertices().map { it.vertex.centralityRang }.maxOrNull()
+
+        val step = (max!! - min!!) / graph.vertices().size
+        for (v in graph.vertices()) {
+            val x = (v.vertex.centralityRang - min) * 10
+            v.radiusSummand.value += x * step
+        }
+    }
+
 
     fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {
 
