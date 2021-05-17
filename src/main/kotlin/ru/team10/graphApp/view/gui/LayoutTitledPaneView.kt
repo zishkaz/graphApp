@@ -1,12 +1,12 @@
 package ru.team10.graphApp.view.gui
 
-import javafx.animation.AnimationTimer
 import javafx.scene.control.TitledPane
 import ru.team10.graphApp.controller.algorithms.Layout
+import ru.team10.graphApp.view.layoutAnim
 import ru.team10.graphApp.view.createTextField
 import tornadofx.*
 
-fun TitledPane.createLayoutMenu(root: View, anim: AnimationTimer) {
+fun TitledPane.createLayoutMenu(root: View) {
 
     isExpanded = false
     vbox(5) {
@@ -16,12 +16,12 @@ fun TitledPane.createLayoutMenu(root: View, anim: AnimationTimer) {
                 text = if (isSelected) {
                     runAsync {
                         root.currentStage?.apply {
-                            anim.start()
+                            layoutAnim.start()
                         }
                     }
                     "STOP"
                 } else {
-                    anim.stop()
+                    layoutAnim.stop()
                     "START"
                 }
             }

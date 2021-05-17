@@ -15,9 +15,10 @@ import tornadofx.*
 
 internal var showEdges = ToggleButton()
 internal var graphView = GraphView(Graph())
-var labels = SimpleBooleanProperty(false)
+internal var labels = SimpleBooleanProperty(false)
+internal var layoutAnim = Layout.applyForceAtlas2(graphView)
 
-fun TextField.createTextField(constantName: String, prop: SimpleDoubleProperty): TextField {
+internal fun TextField.createTextField(constantName: String, prop: SimpleDoubleProperty): TextField {
 
     val doubleValue = SimpleDoubleProperty(0.0)
     doubleValue.bindBidirectional(prop)
@@ -40,9 +41,7 @@ fun TextField.createTextField(constantName: String, prop: SimpleDoubleProperty):
     return this
 }
 
-class MainView : View("Graph Application") {
-
-    private var anim = Layout.applyForceAtlas2(graphView)
+internal class MainView : View("Graph Application") {
 
     override val root = borderpane {
         stylesheets.add("1.css")
@@ -64,8 +63,8 @@ class MainView : View("Graph Application") {
             }
         }
         left = vbox {
-            titledpane("Graph").createGraphMenu(this@borderpane) {anim = Layout.applyForceAtlas2(graphView)}
-            titledpane("Layout").createLayoutMenu(this@MainView, anim)
+            titledpane("Graph").createGraphMenu(this@borderpane)
+            titledpane("Layout").createLayoutMenu(this@MainView)
             titledpane("Community").createCommunityMenu()
             titledpane("Centrality").createCentralityMenu()
             titledpane("Settings").createSettingsMenu()

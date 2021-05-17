@@ -13,20 +13,20 @@ import tornadofx.*
 
 fun Button.createJsonImportButton(op: () -> Unit) {
 
-        action {
-            val window = Popup()
-            val fileChooser = FileChooser()
-            val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
-            fileChooser.extensionFilters.add(importFilter)
-            fileChooser.title = "Open Resource File"
-            val file = fileChooser.showOpenDialog(window)
-            file?.let {
-                FileLoader().loadGraph(file.path)?.let {
-                    graphView = it
-                    op()
-                }
+    action {
+        val window = Popup()
+        val fileChooser = FileChooser()
+        val importFilter = FileChooser.ExtensionFilter("Graph file (*.json)", "*.json")
+        fileChooser.extensionFilters.add(importFilter)
+        fileChooser.title = "Open Resource File"
+        val file = fileChooser.showOpenDialog(window)
+        file?.let {
+            FileLoader().loadGraph(file.path)?.let {
+                graphView = it
+                op()
             }
         }
+    }
 }
 
 fun Button.createSQLiteImportButton(op: () -> Unit) {
