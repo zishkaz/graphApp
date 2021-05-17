@@ -18,6 +18,10 @@ class VertexView(
     color: Color = vertexColor,
 ) : Circle(x, y, vertexRadius.value, color) {
 
+    init {
+        radiusProperty().bind(vertexRadius)
+    }
+
     var position: Pair<Double, Double>
         get() = centerX to centerY
         set(value) {
