@@ -13,6 +13,7 @@ import java.sql.SQLException
 import kotlin.random.Random
 
 class SQLiteLoader : GraphLoader, Controller() {
+
     override fun loadGraph(data: String): GraphView? {
 
         val connection =

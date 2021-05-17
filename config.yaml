@@ -5,6 +5,8 @@ vertexColor:
 
 vertexRadius: 10.0
 
+showEdges: true
+
 layoutConstants:
   scaling: 10.0
   gravity: 1.0

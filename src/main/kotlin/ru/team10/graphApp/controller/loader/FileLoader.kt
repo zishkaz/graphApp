@@ -1,14 +1,12 @@
 package ru.team10.graphApp.controller.loader
 
 import javafx.scene.control.Alert
-import javafx.scene.paint.Color
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
-import tornadofx.Stylesheet.Companion.alert
 import tornadofx.alert
 import tornadofx.getDouble
 import tornadofx.loadJsonObject

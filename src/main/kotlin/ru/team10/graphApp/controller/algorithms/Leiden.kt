@@ -2,19 +2,20 @@ package ru.team10.graphApp.controller.algorithms
 
 import javafx.scene.paint.Color
 import nl.cwts.networkanalysis.run.RunNetworkClustering
+import ru.team10.graphApp.utils.DataConverter
 import ru.team10.graphApp.view.GraphView
-import util.DataConverter
 import java.io.File
 
 internal var leidenResolution: Double = 0.2
 
-const val leidenPathname = "src/main/kotlin/leidenOutput.csv"
-const val utilityPathname = "src/main/kotlin/leidenUtil.txt"
+const val leidenPathname = "leidenOutput.csv"
+const val utilityPathname = "leidenUtil.txt"
 
 class Leiden(
     private val graph: GraphView
 ) {
     fun startLeiden(resolution: Double) {
+
         val dataConverter = DataConverter(graph)
         dataConverter.prepareDataForClustering()
         RunNetworkClustering.main(
@@ -23,6 +24,7 @@ class Leiden(
     }
 
     fun setCommunity() {
+
         val communityIDs = mutableMapOf<Int, Int>()
         File(leidenPathname).readLines().map { line ->
             val (vertex , community) = line.split("\t").toMutableList()
@@ -38,6 +40,7 @@ class Leiden(
 
     companion object {
         fun deleteUtilityFiles() {
+
             File(utilityPathname).delete()
             File(leidenPathname).delete()
         }
@@ -45,17 +48,18 @@ class Leiden(
 }
 
 internal fun colorAccordingToCommunity(graph: GraphView) {
+
     val communityCount = 1 + graph.vertices().maxOf { it.vertex.communityID }
     val step = 16777216 / communityCount
-    var colorNow = 0
+    var colorNow = step
     val communityToColor = hashMapOf<Int, Color>()
     repeat(communityCount) {
-
-        communityToColor[it] = Color.rgb(colorNow / 65536, (colorNow % 65536) / 256, colorNow % 256)
+        val b = colorNow % 256
+        val g = ((colorNow - b) / 256) % 256
+        communityToColor[it] = Color.rgb(10, g, b)
         colorNow += step
     }
     for (node in graph.vertices()) {
-
         node.color = communityToColor[node.vertex.communityID]!!
     }
 }

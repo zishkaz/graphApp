@@ -1,6 +1,9 @@
 package ru.team10.graphApp.controller.algorithms
 
 import javafx.animation.AnimationTimer
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Point2D
 import ru.team10.graphApp.view.EdgeView
 import ru.team10.graphApp.view.GraphView
@@ -19,10 +22,10 @@ private const val barnesHutTheta = 1.2
 
 object Layout : Controller() {
 
-    internal var scaling = 1000.0
-    internal var gravity = 0.1
-    internal var jitterTolerance = 0.1
-    internal var isBarnesHutActive = false
+    internal var scaling = SimpleDoubleProperty(1000.0)
+    internal var gravity = SimpleDoubleProperty(0.1)
+    internal var jitterTolerance = SimpleDoubleProperty(0.1)
+    internal var isBarnesHutActive = SimpleBooleanProperty(false)
 
     private val dx = hashMapOf<VertexView, Double>()
     private val dy = hashMapOf<VertexView, Double>()
@@ -35,7 +38,7 @@ object Layout : Controller() {
 
             var speedEfficiency = speedEfficiencyDefault
             var globalSpeed = globalSpeedDefault
-            if (isBarnesHutActive) {
+            if (isBarnesHutActive.get()) {
                 val rootRegion = Region(graph.vertices())
                 rootRegion.buildSubregions()
                 for (node in graph.vertices()) applyBarnesHutRepulsionForce(node, rootRegion)
@@ -48,15 +51,13 @@ object Layout : Controller() {
                 val swinging = sqrt((dxOld[node]!! - dx[node]!!).pow(2) + (dyOld[node]!! - dy[node]!!).pow(2))
                 totalSwinging += node.vertex.mass * swinging
                 totalEffectiveTraction += node.vertex.mass * 0.5 * sqrt(
-                    (dxOld[node]!! + dx[node]!!).pow(2) + (dyOld[node]!! + dy[node]!!).pow(
-                        2
-                    )
+                    (dxOld[node]!! + dx[node]!!).pow(2) + (dyOld[node]!! + dy[node]!!).pow(2)
                 )
             }
             val estimatedOptimalJitterTolerance = 0.05 * sqrt(graph.vertices().size.toDouble())
             val minJT = sqrt(estimatedOptimalJitterTolerance)
             val maxJT = 10
-            var jt = jitterTolerance * max(
+            var jt = jitterTolerance.get() * max(
                 minJT,
                 min(
                     maxJT.toDouble(),
@@ -66,7 +67,7 @@ object Layout : Controller() {
             )
             if (totalSwinging / totalEffectiveTraction > 2.0) {
                 if (speedEfficiency > minSpeedEfficiency) speedEfficiency *= 0.5
-                jt = max(jt, jitterTolerance)
+                jt = max(jt, jitterTolerance.get())
             }
             val targetSpeed = jt * speedEfficiency * totalEffectiveTraction / totalSwinging
             if (totalSwinging > jt * totalEffectiveTraction) {
@@ -112,7 +113,6 @@ object Layout : Controller() {
                     mass += node.vertex.mass
                     massSumX += node.centerX * node.vertex.mass
                     massSumY += node.centerY * node.vertex.mass
-
                 }
                 massCenterX = massSumX / mass
                 massCenterY = massSumY / mass
@@ -209,7 +209,7 @@ object Layout : Controller() {
             val yDist = v.centerY - u.centerY
             val dist = computeDistance(v, u) - v.radius - u.radius
 
-            val factor = if (dist > 0) scaling * v.vertex.mass * u.vertex.mass / dist.pow(2)
+            val factor = if (dist > 0) scaling.get() * v.vertex.mass * u.vertex.mass / dist.pow(2)
             else antiCollisionCoeff * v.vertex.mass * u.vertex.mass
             dx[v] = dx[v]!! + xDist * factor
             dy[v] = dy[v]!! + yDist * factor
@@ -242,7 +242,7 @@ object Layout : Controller() {
         val yDist = node.centerY - region.massCenterY
         val dist = sqrt(xDist.pow(2) + yDist.pow(2))
         if (dist > 0) {
-            val factor = scaling * node.vertex.mass * region.mass / dist.pow(2)
+            val factor = scaling.get() * node.vertex.mass * region.mass / dist.pow(2)
             dx[node] = dx[node]!! - xDist * factor
             dy[node] = dy[node]!! - yDist * factor
         } else if (dist < 0) {
@@ -260,7 +260,7 @@ object Layout : Controller() {
             val yDist = v.centerY - center.y
             val dist = sqrt(xDist.pow(2) + yDist.pow(2)) - v.radius
             if (dist > 0) {
-                val factor = v.vertex.mass * gravity
+                val factor = v.vertex.mass * gravity.get()
                 dx[v] = dx[v]!! - xDist * factor
                 dy[v] = dy[v]!! - yDist * factor
             }

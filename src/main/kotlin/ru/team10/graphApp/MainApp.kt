@@ -3,6 +3,7 @@ package ru.team10.graphApp
 import javafx.stage.Stage
 import ru.team10.graphApp.utils.generateForHarmonic1
 import ru.team10.graphApp.utils.generateForHarmonic2
+import ru.team10.graphApp.utils.genereateFullGraph
 import ru.team10.graphApp.view.MainView
 import tornadofx.App
 import tornadofx.launch
@@ -15,7 +16,7 @@ class MainApp : App(MainView::class) {
             height = 720.0
         }
         super.start(stage)
-        generateForHarmonic2()
+//        genereateFullGraph()
         //started
 //        stage.widthProperty().addListener { _, _, _ -> run { stage.centerOnScreen() } }
 //        stage.heightProperty().addListener { _, _, _ -> run {stage.centerOnScreen()} }

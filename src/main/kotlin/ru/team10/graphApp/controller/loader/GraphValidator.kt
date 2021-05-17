@@ -55,7 +55,7 @@ fun validateGraph(graph: GraphView): Boolean {
             return false
         }
     }
-    if (graph.vertices().map { it.vertex.mass }.sum() - graph.vertices().size != graph.edges().size * 2) {
+    if (graph.vertices().sumOf { it.vertex.mass } - graph.vertices().size != graph.edges().size * 2) {
         alert(
             Alert.AlertType.ERROR,
             "ERROR!\n The graph includes multiple edges. Graph won't open!"

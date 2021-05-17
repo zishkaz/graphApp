@@ -6,6 +6,7 @@ import javafx.scene.paint.Color
 import org.yaml.snakeyaml.Yaml
 import ru.team10.graphApp.controller.algorithms.Layout
 import ru.team10.graphApp.controller.algorithms.leidenResolution
+import ru.team10.graphApp.view.showEdges
 import ru.team10.graphApp.view.vertexColor
 import ru.team10.graphApp.view.vertexRadius
 import tornadofx.alert
@@ -27,7 +28,8 @@ data class Config(
     val vertexColor: VertexColor,
     val vertexRadius: Double,
     val layoutConstants: LayoutConstants,
-    val communityDetectionConstants: CommunityDetectionConstants
+    val communityDetectionConstants: CommunityDetectionConstants,
+    val showEdges: Boolean,
 )
 
 fun loadConfigFile(file: File) {
@@ -40,12 +42,13 @@ fun loadConfigFile(file: File) {
         return
     }
     leidenResolution = config.communityDetectionConstants.resolution
-    vertexRadius = config.vertexRadius
-    Layout.jitterTolerance = config.layoutConstants.jitterTolerance
-    Layout.gravity = config.layoutConstants.gravity
-    Layout.isBarnesHutActive = config.layoutConstants.isBarnesHutActive
-    Layout.scaling = config.layoutConstants.scaling
+    vertexRadius.value = config.vertexRadius
+    Layout.jitterTolerance.value = config.layoutConstants.jitterTolerance
+    Layout.gravity.value = config.layoutConstants.gravity
+    Layout.isBarnesHutActive.value = config.layoutConstants.isBarnesHutActive
+    Layout.scaling.value = config.layoutConstants.scaling
     vertexColor = Color.rgb(config.vertexColor.r, config.vertexColor.g, config.vertexColor.b)
+    showEdges.isSelected = config.showEdges
 }
 
 fun saveConfig(file: File) {
@@ -67,6 +70,7 @@ fun saveConfig(file: File) {
     val communityDetectionConstantsMap = hashMapOf<String, Any>()
     communityDetectionConstantsMap["resolution"] = leidenResolution
     generalMap["communityDetectionConstants"] = communityDetectionConstantsMap
+//    generalMap["showEdges"] = showEdges.isSelected
     val writer = StringWriter()
     yaml.dump(generalMap, writer)
     file.writeText(writer.toString())

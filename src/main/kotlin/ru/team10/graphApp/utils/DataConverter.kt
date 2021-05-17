@@ -1,4 +1,4 @@
-package util
+package ru.team10.graphApp.utils
 
 import ru.team10.graphApp.controller.algorithms.utilityPathname
 import ru.team10.graphApp.view.GraphView

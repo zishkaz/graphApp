@@ -17,6 +17,7 @@ object Centrality : Controller() {
     }
 
     private fun setNeighbours(edges: List<Edge>, verticesExtraData: HashMap<String, ExtraVertexData>) {
+
         for (i in edges.indices) {
             verticesExtraData[edges[i].first.id]!!.neighbours[edges[i].second] = edges[i].weight
             verticesExtraData[edges[i].second.id]!!.neighbours[edges[i].first] = edges[i].weight
@@ -24,14 +25,13 @@ object Centrality : Controller() {
     }
 
     fun applyHarmonicCentrality(graph: GraphView) {
-        val vertices = graph.vertices()
+
         val edges = graph.edges().map { it.edge }.toList()
         val vert = graph.vertices().map { it.vertex }.toList()
         val verticesExtraData = hashMapOf<String, ExtraVertexData>()
         for (i in vert) {
             verticesExtraData[i.id] = ExtraVertexData(i.id)
         }
-
         setNeighbours(edges, verticesExtraData)
         for (i in vert) {
             i.centralityRang = setUpVertices(i, vert, verticesExtraData)
@@ -45,13 +45,11 @@ object Centrality : Controller() {
     ): Double {
 
         val q = TreeSet<Vertex>()
-
         for (i in vert.indices) {
             verticesExtraData[vert[i].id]!!.previous = if (vert[i] == start) start else null
             vert[i].shortestDist = if (vert[i] == start) 0.0 else Double.MAX_VALUE
             q.add(vert[i])
         }
-
         return runDijkstra(q, verticesExtraData)
     }
 
@@ -74,13 +72,12 @@ object Centrality : Controller() {
                 }
             }
         }
-
         return sumOfShortestPaths
     }
 
     fun setColor(step1: Double, step2: Double, min: Double, vertices: Collection<VertexView>) {
 
-        for (v in vertices) {// SET COLORS
+        for (v in vertices) {
             val x = (v.vertex.centralityRang - min) / step1
             v.color = Color.rgb(100, 255 - (step2 * x).toInt(), 255)
         }
