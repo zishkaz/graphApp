@@ -42,8 +42,8 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
 
             v.setOnMouseEntered { e -> e?.let { controller.entered(it) } }
             v.setOnMousePressed { e -> e?.let { controller.pressed(it) } }
-            v.setOnMouseReleased { e -> e?.let { controller.released(it) } }
             v.setOnMouseExited { e -> e?.let { controller.exited(it) } }
+            v.setOnDragDetected { e -> e?.let { controller.dragged(it) } }
 
             add(v)
             add(v.window)

@@ -55,9 +55,6 @@ internal class MainView : View("Graph Application") {
         this.setOnMouseDragged {
             controller.dragged(it, graphView)
         }
-        this.setOnMouseDragExited {
-            controller.exited(it)
-        }
 
         center {
             add(graphView)

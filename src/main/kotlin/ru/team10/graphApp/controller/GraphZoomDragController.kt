@@ -28,21 +28,10 @@ class GraphZoomDragController : Controller(){
     fun dragged(e: MouseEvent, graphView: GraphView) {
 
         if (!e.isPrimaryButtonDown) return
-        if (e.target is VertexView) {
-            return
-        }
+        if (e.target is VertexView) return
         val currentPoint = Point2D(e.x, e.y)
         graphView.translateX += currentPoint.x - previousPoint.x
         graphView.translateY += currentPoint.y - previousPoint.y
         previousPoint = currentPoint
-        e.consume()
-    }
-    fun exited(e: MouseEvent) {
-
-        val v = VertexController().check(e)
-        if (!e.isPrimaryButtonDown) {
-            v.scene.cursor = Cursor.DEFAULT
-            v.radiusSummand.value -= (v.radius / 3)
-        }
     }
 }

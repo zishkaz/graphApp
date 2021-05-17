@@ -15,19 +15,10 @@ class VertexController : Controller() {
         }
     }
 
-    fun released(event: MouseEvent) {
-
-        val v = check(event)
-        v.scene.cursor = Cursor.HAND
-        v.radiusSummand.value -= (v.radius / 3)
-        event.consume()
-    }
-
     fun pressed(event: MouseEvent) {
 
         val v = check(event)
-        if (!event.isPrimaryButtonDown)
-            return
+        if (!event.isPrimaryButtonDown) return
         v.scene.cursor = Cursor.CLOSED_HAND
         v.window.layoutX = v.centerX + 10
         v.window.layoutY = v.centerY - 50
@@ -50,7 +41,16 @@ class VertexController : Controller() {
         }
     }
 
-    fun check(event: MouseEvent): VertexView {
+    fun dragged(event: MouseEvent) {
+
+        val v = check(event)
+        if (event.isPrimaryButtonDown) {
+            v.scene.cursor = Cursor.DEFAULT
+            v.radiusSummand.value -= (v.radius / 3)
+        }
+    }
+
+    private fun check(event: MouseEvent): VertexView {
 
         require(event.target is VertexView)
         return event.target as VertexView
