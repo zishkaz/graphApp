@@ -62,6 +62,5 @@ fun TitledPane.createSettingsMenu() {
         }
         label("Vertex radius")
         textfield().createTextField("Radius", vertexRadius)
-        checkbox("labels", labels)
     }
 }

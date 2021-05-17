@@ -36,28 +36,23 @@ class VertexView(
         set(value) {
             fill = value
         }
-    val st = StackPane().apply {
+
+    var infoText = text {}
+
+    val window = StackPane().apply {
+        isVisible = false
         add(Rectangle(190.0, 100.0, Color.CORAL))
         add(borderpane {
             center {
-                add(text("""
-                ID: ${vertex.id}
-                Community ID: ${vertex.communityID}
-                Centrality rang: ${vertex.centralityRang}
-                """.trimIndent()) {
-                    isVisible = true
-                })
+                add(infoText)
             }
             right {
                 button("X") {
                     action {
-                        labels.value = !labels.value
+                        this@apply.isVisible = !this@apply.isVisible
                     }
                 }
             }
         })
-        visibleProperty().bind(labels)
-        this.layoutXProperty().bind(this@VertexView.centerXProperty().subtract(layoutBounds.width / 2))
-        this.layoutYProperty().bind(this@VertexView.centerYProperty().add(radiusProperty()).add(layoutBounds.height))
     }
 }

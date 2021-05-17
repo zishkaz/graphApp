@@ -46,7 +46,7 @@ class GraphView(graph: Graph, private val verticesView: List<VertexView> = empty
             v.setOnMouseExited { e -> e?.let { controller.exited(it) } }
 
             add(v)
-            add(v.st)
+            add(v.window)
         }
     }
 }

@@ -1,6 +1,5 @@
 package ru.team10.graphApp.view
 
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.TextField
@@ -16,7 +15,6 @@ import tornadofx.*
 
 internal var showEdges = ToggleButton()
 internal var graphView = GraphView(Graph())
-internal var labels = SimpleBooleanProperty(false)
 internal var layoutAnim = Layout.applyForceAtlas2(graphView)
 
 internal fun TextField.createTextField(constantName: String, prop: SimpleDoubleProperty): TextField {
@@ -47,7 +45,7 @@ internal class MainView : View("Graph Application") {
     override val root = borderpane {
         stylesheets.add("1.css")
 
-        val controller = GraphZoomDragController(graphView)
+        val controller = GraphZoomDragController()
         this.setOnScroll {
             controller.scroll(it, graphView)
         }
@@ -55,7 +53,10 @@ internal class MainView : View("Graph Application") {
             controller.pressed(it)
         }
         this.setOnMouseDragged {
-            controller.pressed(it, graphView)
+            controller.dragged(it, graphView)
+        }
+        this.setOnMouseDragExited {
+            controller.exited(it)
         }
 
         center {
