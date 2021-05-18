@@ -1,8 +1,5 @@
 package ru.team10.graphApp
 
-//import ru.team10.graphApp.utils.generateForHarmonic1
-//import ru.team10.graphApp.utils.generateForHarmonic2
-//import ru.team10.graphApp.utils.genereateFullGraph
 import javafx.stage.Stage
 import mu.KLogging
 import ru.team10.graphApp.view.MainView

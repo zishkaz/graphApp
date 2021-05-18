@@ -67,7 +67,10 @@ internal class Import : ApplicationTest() {
         var stringTemp = data.removePrefix("ID: ").takeWhile { it != '\n' }
         assertEquals(stringTemp, temp.vertex.id)
         stringTemp = data.drop(data.indexOf('\n') + 1)
-        assertEquals(stringTemp.removePrefix("Community ID: ").takeWhile { it != '\n' }.toInt(), temp.vertex.communityID)
+        assertEquals(
+            stringTemp.removePrefix("Community ID: ").takeWhile { it != '\n' }.toInt(),
+            temp.vertex.communityID
+        )
         stringTemp = stringTemp.drop(stringTemp.indexOf('\n') + 1).removePrefix("Centrality rang: ")
         assertEquals(stringTemp, String.format("%.3f", temp.vertex.centralityRang))
     }

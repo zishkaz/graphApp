@@ -35,7 +35,6 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
 
     text = "SQLite"
     setOnMouseReleased {
-        //isDisable = true
         hbox {
             val input = textfield()
             input.promptText = ("Enter URI")
@@ -58,7 +57,6 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
 fun Button.createNeo4jImportButton(op: () -> Unit) {
 
     setOnMouseReleased {
-        //isDisable = true
         vbox(5) {
             var data: String
 
@@ -111,7 +109,6 @@ fun Button.createJsonExportButton() {
 fun Button.createSQLiteExportButton() {
 
     setOnMouseReleased {
-        //isDisable = true
         hbox {
             val input = textfield()
             input.promptText = ("Enter URI")

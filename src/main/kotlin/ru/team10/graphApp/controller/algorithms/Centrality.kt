@@ -14,7 +14,7 @@ object Centrality : Controller() {
     private val logger = KotlinLogging.logger {}
     var wasDone = false
 
-    private data class ExtraVertexData(val vertex: Vertex): Comparable<ExtraVertexData> {
+    private data class ExtraVertexData(val vertex: Vertex) : Comparable<ExtraVertexData> {
 
         var shortestDist: Double = Double.MAX_VALUE
         var mass = 1
@@ -23,6 +23,7 @@ object Centrality : Controller() {
             if (shortestDist == other.shortestDist) return vertex.id.compareTo(other.vertex.id)
             return shortestDist.compareTo(other.shortestDist)
         }
+
         var previous: Vertex? = null
         var neighbours = HashMap<Vertex, Double>()
     }
@@ -68,7 +69,6 @@ object Centrality : Controller() {
         }
         return runDijkstra(q, verticesExtraData)
     }
-
 
     private fun runDijkstra(q: TreeSet<ExtraVertexData>, verticesExtraData: HashMap<String, ExtraVertexData>): Double {
 

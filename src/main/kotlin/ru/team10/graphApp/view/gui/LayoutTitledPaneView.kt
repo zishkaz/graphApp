@@ -31,10 +31,10 @@ fun TitledPane.createLayoutMenu(root: View) {
         textfield().createTextField("Scaling", Layout.scaling)
 
         label("Gravity")
-        textfield().createTextField( "Gravity", Layout.gravity)
+        textfield().createTextField("Gravity", Layout.gravity)
 
         label("Jitter tolerance")
-        textfield().createTextField( "Jitter tolerance", Layout.jitterTolerance)
+        textfield().createTextField("Jitter tolerance", Layout.jitterTolerance)
         checkbox("BarnesHut optimisation") {
             selectedProperty().bindBidirectional(Layout.isBarnesHutActive)
         }

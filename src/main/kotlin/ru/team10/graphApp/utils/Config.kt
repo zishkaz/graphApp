@@ -33,6 +33,7 @@ data class Config(
 )
 
 fun loadConfigFile(file: File) {
+
     val config: Config
     try {
         config = ConfigLoader().loadConfigOrThrow(file)
