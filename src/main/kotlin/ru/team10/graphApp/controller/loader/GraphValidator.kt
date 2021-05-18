@@ -5,7 +5,7 @@ import mu.KotlinLogging
 import ru.team10.graphApp.view.GraphView
 import tornadofx.alert
 
-fun validateGraph(graph: GraphView): Boolean {
+internal fun validateGraph(graph: GraphView): Boolean {
 
     val logger = KotlinLogging.logger {}
 

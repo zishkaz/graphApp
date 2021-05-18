@@ -19,7 +19,7 @@ private const val speedEfficiencyDefault = 1.0
 private const val globalSpeedDefault = 1.0
 private const val barnesHutTheta = 1.2
 
-object Layout : Controller() {
+internal object Layout : Controller() {
 
     internal var scaling = SimpleDoubleProperty(1000.0)
     internal var gravity = SimpleDoubleProperty(0.1)

@@ -11,7 +11,7 @@ import tornadofx.*
 var vertexRadius: SimpleDoubleProperty = SimpleDoubleProperty(4.0)
 var vertexColor: Color = Color.AQUA
 
-class VertexView(
+internal class VertexView(
     val vertex: Vertex,
     x: Double = 0.0,
     y: Double = 0.0,

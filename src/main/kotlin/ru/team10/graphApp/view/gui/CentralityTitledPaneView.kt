@@ -9,7 +9,7 @@ import ru.team10.graphApp.utils.buildCentralityReport
 import ru.team10.graphApp.view.graphView
 import tornadofx.*
 
-fun TitledPane.createCentralityMenu() {
+internal fun TitledPane.createCentralityMenu() {
 
     isExpanded = false
     vbox(10) {

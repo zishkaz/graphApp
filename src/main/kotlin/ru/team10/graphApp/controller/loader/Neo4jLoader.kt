@@ -13,7 +13,7 @@ import tornadofx.Controller
 import tornadofx.alert
 import kotlin.random.Random
 
-class Neo4jLoader : GraphLoader, Controller() {
+internal class Neo4jLoader : GraphLoader, Controller() {
 
     companion object : KLogging()
 

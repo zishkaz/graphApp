@@ -1,6 +1,6 @@
 package ru.team10.graphApp.model
 
-class Graph {
+internal class Graph {
 
     private val vertices = hashMapOf<String, Vertex>()
     private val edges = hashMapOf<Pair<Vertex, Vertex>, Edge>()

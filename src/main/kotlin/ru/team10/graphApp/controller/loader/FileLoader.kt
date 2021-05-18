@@ -17,7 +17,7 @@ import kotlin.io.path.Path
 import kotlin.random.Random
 
 
-class FileLoader : GraphLoader, Controller() {
+internal class FileLoader : GraphLoader, Controller() {
 
     companion object : KLogging()
 

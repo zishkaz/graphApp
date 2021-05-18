@@ -8,7 +8,7 @@ import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 
-class GraphZoomDragController : Controller() {
+internal class GraphZoomDragController : Controller() {
 
     fun scroll(e: ScrollEvent, graphView: GraphView) {
 

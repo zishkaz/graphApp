@@ -5,7 +5,7 @@ import ru.team10.graphApp.controller.VertexController
 import ru.team10.graphApp.model.Graph
 import tornadofx.add
 
-class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()) : Pane() {
+internal class GraphView(graph: Graph, private val verticesView: List<VertexView> = emptyList()) : Pane() {
 
     private val vertices by lazy {
 

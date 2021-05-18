@@ -11,7 +11,7 @@ import ru.team10.graphApp.view.graphView
 import ru.team10.graphApp.view.showEdges
 import tornadofx.*
 
-fun TitledPane.createSettingsMenu() {
+internal fun TitledPane.createSettingsMenu() {
 
     isExpanded = false
     vbox(10) {

@@ -3,7 +3,7 @@ package ru.team10.graphApp.view
 import javafx.scene.shape.Line
 import ru.team10.graphApp.model.Edge
 
-class EdgeView(
+internal class EdgeView(
     val edge: Edge,
     val first: VertexView,
     val second: VertexView,

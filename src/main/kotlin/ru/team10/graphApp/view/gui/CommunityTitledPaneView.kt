@@ -13,7 +13,7 @@ import ru.team10.graphApp.view.createTextField
 import ru.team10.graphApp.view.graphView
 import tornadofx.*
 
-fun TitledPane.createCommunityMenu() {
+internal fun TitledPane.createCommunityMenu() {
 
     isExpanded = false
     vbox(10) {
