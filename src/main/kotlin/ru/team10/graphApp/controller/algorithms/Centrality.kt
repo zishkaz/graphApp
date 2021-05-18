@@ -17,15 +17,13 @@ object Centrality : Controller() {
     private data class ExtraVertexData(val vertex: Vertex) : Comparable<ExtraVertexData> {
 
         var shortestDist: Double = Double.MAX_VALUE
-        var mass = 1
+        var previous: Vertex? = null
+        var neighbours = HashMap<Vertex, Double>()
 
         override fun compareTo(other: ExtraVertexData): Int {
             if (shortestDist == other.shortestDist) return vertex.id.compareTo(other.vertex.id)
             return shortestDist.compareTo(other.shortestDist)
         }
-
-        var previous: Vertex? = null
-        var neighbours = HashMap<Vertex, Double>()
     }
 
     private fun setNeighbours(edges: List<Edge>, verticesExtraData: HashMap<String, ExtraVertexData>) {
@@ -74,24 +72,24 @@ object Centrality : Controller() {
 
         var sumOfShortestPaths = 0.0
         while (!q.isEmpty()) {
-            val u = q.pollFirst()
-            if (u.shortestDist == Double.MAX_VALUE) break
-            for (a in u.neighbours) {
-                val v = verticesExtraData[a.key.id]!!
-                val alternateDist = u.shortestDist + a.value
-                if (alternateDist < v.shortestDist) {
-                    q.remove(v)
-                    v.shortestDist = alternateDist
+            val currVertex = q.pollFirst()
+            if (currVertex!!.shortestDist == Double.MAX_VALUE) break
+            for (v in currVertex.neighbours) {
+                val neigh = verticesExtraData[v.key.id]!!
+                val alternateDist = currVertex.shortestDist + v.value
+                if (alternateDist < neigh.shortestDist) {
+                    q.remove(neigh)
+                    neigh.shortestDist = alternateDist
                     sumOfShortestPaths += 1.0 / alternateDist
-                    v.previous = u.vertex
-                    q.add(v)
+                    neigh.previous = currVertex.vertex
+                    q.add(neigh)
                 }
             }
         }
         return sumOfShortestPaths
     }
 
-    fun setRadius(graph: GraphView) {
+    private fun setRadius(graph: GraphView) {
 
         val min = graph.vertices().map { it.vertex.centralityRang }.minOrNull()
         val max = graph.vertices().map { it.vertex.centralityRang }.maxOrNull()
