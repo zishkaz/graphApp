@@ -14,7 +14,15 @@ object Centrality : Controller() {
     private val logger = KotlinLogging.logger {}
     var wasDone = false
 
-    private data class ExtraVertexData(val vertID: String) {
+    private data class ExtraVertexData(val vertex: Vertex): Comparable<ExtraVertexData> {
+
+        var shortestDist: Double = Double.MAX_VALUE
+        var mass = 1
+
+        override fun compareTo(other: ExtraVertexData): Int {
+            if (shortestDist == other.shortestDist) return vertex.id.compareTo(other.vertex.id)
+            return shortestDist.compareTo(other.shortestDist)
+        }
         var previous: Vertex? = null
         var neighbours = HashMap<Vertex, Double>()
     }
@@ -28,12 +36,13 @@ object Centrality : Controller() {
     }
 
     fun applyHarmonicCentrality(graph: GraphView) {
+
         logger.info("The algorithm for finding key vertices has been started.")
         val edges = graph.edges().map { it.edge }.toList()
         val vert = graph.vertices().map { it.vertex }.toList()
         val verticesExtraData = hashMapOf<String, ExtraVertexData>()
         for (i in vert) {
-            verticesExtraData[i.id] = ExtraVertexData(i.id)
+            verticesExtraData[i.id] = ExtraVertexData(i)
         }
         setNeighbours(edges, verticesExtraData)
         for (i in vert) {
@@ -51,30 +60,30 @@ object Centrality : Controller() {
         verticesExtraData: HashMap<String, ExtraVertexData>
     ): Double {
 
-        val q = TreeSet<Vertex>()
+        val q = TreeSet<ExtraVertexData>()
         for (i in vert.indices) {
             verticesExtraData[vert[i].id]!!.previous = if (vert[i] == start) start else null
-            vert[i].shortestDist = if (vert[i] == start) 0.0 else Double.MAX_VALUE
-            q.add(vert[i])
+            verticesExtraData[vert[i].id]!!.shortestDist = if (vert[i] == start) 0.0 else Double.MAX_VALUE
+            q.add(verticesExtraData[vert[i].id]!!)
         }
         return runDijkstra(q, verticesExtraData)
     }
 
 
-    private fun runDijkstra(q: TreeSet<Vertex>, verticesExtraData: HashMap<String, ExtraVertexData>): Double {
+    private fun runDijkstra(q: TreeSet<ExtraVertexData>, verticesExtraData: HashMap<String, ExtraVertexData>): Double {
 
         var sumOfShortestPaths = 0.0
         while (!q.isEmpty()) {
             val u = q.pollFirst()
-            if (u!!.shortestDist == Double.MAX_VALUE) break
-            for (a in verticesExtraData[u.id]!!.neighbours) {
-                val v = a.key
+            if (u.shortestDist == Double.MAX_VALUE) break
+            for (a in u.neighbours) {
+                val v = verticesExtraData[a.key.id]!!
                 val alternateDist = u.shortestDist + a.value
                 if (alternateDist < v.shortestDist) {
                     q.remove(v)
                     v.shortestDist = alternateDist
                     sumOfShortestPaths += 1.0 / alternateDist
-                    verticesExtraData[v.id]!!.previous = u
+                    v.previous = u.vertex
                     q.add(v)
                 }
             }
@@ -83,6 +92,7 @@ object Centrality : Controller() {
     }
 
     fun setRadius(graph: GraphView) {
+
         val min = graph.vertices().map { it.vertex.centralityRang }.minOrNull()
         val max = graph.vertices().map { it.vertex.centralityRang }.maxOrNull()
 

@@ -1,12 +1,6 @@
 package ru.team10.graphApp.model
 
-data class Vertex(val id: String, var centralityRang: Double = -1.0, var communityID: Int = -1) : Comparable<Vertex> {
+data class Vertex(val id: String, var centralityRang: Double = -1.0, var communityID: Int = -1) {
 
-    var shortestDist: Double = Double.MAX_VALUE
     var mass = 1
-
-    override fun compareTo(other: Vertex): Int {
-        if (shortestDist == other.shortestDist) return id.compareTo(other.id)
-        return shortestDist.compareTo(other.shortestDist)
-    }
 }

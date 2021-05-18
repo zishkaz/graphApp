@@ -14,12 +14,13 @@ internal var leidenResolution = SimpleDoubleProperty(0.2)
 const val leidenPathname = "leidenOutput.csv"
 const val utilityPathname = "leidenUtil.txt"
 
-
 class Leiden(
     private val graph: GraphView
 ) {
+
     private val logger = KotlinLogging.logger {}
     fun startLeiden(resolution: Double) {
+
         logger.info("Started community detection algorithm.")
         val dataConverter = DataConverter(graph)
         dataConverter.prepareDataForClustering()
@@ -38,6 +39,7 @@ class Leiden(
     }
 
     fun setCommunity() {
+
         logger.info("Setting of community values for vertexes has started")
         try {
             val communityIDs = mutableMapOf<Int, Int>()
@@ -72,6 +74,7 @@ class Leiden(
 }
 
 internal fun colorAccordingToCommunity(graph: GraphView) {
+
     val logger = KotlinLogging.logger {}
     logger.info("The painting of the vertexes depending on the community has started.")
     try {
