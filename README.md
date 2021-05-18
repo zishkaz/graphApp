@@ -4,7 +4,7 @@
 
 Layout algorithms give the shape to the graph. 
 This app provides [ForceAtlas2](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0098679) layout algorithms. 
-The Layout tab allows user to change layout settings while running.\
+The Layout tab allows user to change layout settings while running.
 
 **Settings:**
 - Scaling
@@ -17,7 +17,7 @@ Community detection, also called graph partition,
 helps us to reveal the hidden relations among the nodes in the network.
 So where the goal is to find groups of nodes 
 that are, in some sense, more similar to each other than to the other nodes.
-This app provides Leiden algorithm.\
+This app provides Leiden algorithm.
 
 **Settings:**
 - Resolution - resolution parameter of the quality function
@@ -25,7 +25,7 @@ This app provides Leiden algorithm.\
 
 Centrality measures calculate the importance 
 of any given node in a network.
-This app provides Harmonic centrality (variant of closeness centrality).\
+This app provides Harmonic centrality (variant of closeness centrality).
 
 This measure:
 - scores each node based on their ‘closeness’ to
