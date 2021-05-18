@@ -1,0 +1,16 @@
+{
+  "vertices": [
+    {
+      "id": "Vlad"
+    },
+    {
+      "id": "Alice"
+    }
+  ],
+  "edges": [
+    {
+      "first": 0,
+      "second": 1
+    }
+  ]
+}

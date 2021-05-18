@@ -11,5 +11,12 @@ class Graph {
 
     fun addVertex(v: Vertex) = vertices.put(v.id, v)
 
-    fun addEdge(e: Edge) = edges.put(Pair(e.first, e.second), e)
+    fun addEdge(e: Edge) {
+
+        if (!edges.containsKey(e.first to e.second) && !edges.containsKey(e.second to e.first)) {
+            edges[Pair(e.first, e.second)] = e
+            e.first.mass++
+            e.second.mass++
+        }
+    }
 }

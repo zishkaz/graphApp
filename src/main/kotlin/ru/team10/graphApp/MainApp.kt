@@ -1,20 +1,23 @@
 package ru.team10.graphApp
 
 import javafx.stage.Stage
+import mu.KLogging
 import ru.team10.graphApp.view.MainView
 import tornadofx.App
 import tornadofx.launch
 
-class MainApp: App(MainView::class) {
+class MainApp : App(MainView::class) {
+
+    companion object : KLogging()
+
     override fun start(stage: Stage) {
-        //starting
+        logger.info("Launching the app.")
         with(stage) {
-            width = 800.0
-            height = 600.0
+            width = 1280.0
+            height = 720.0
         }
         super.start(stage)
-
-        //started
+        logger.info("The application was successfully launched.")
     }
 }
 

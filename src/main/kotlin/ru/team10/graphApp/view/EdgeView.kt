@@ -4,10 +4,10 @@ import javafx.scene.shape.Line
 import ru.team10.graphApp.model.Edge
 
 class EdgeView(
-    edge: Edge,
-    first: VertexView,
-    second: VertexView,)
-    : Line() {
+    val edge: Edge,
+    val first: VertexView,
+    val second: VertexView,
+) : Line() {
 
     init {
         startXProperty().bind(first.centerXProperty())
