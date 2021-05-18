@@ -82,10 +82,9 @@ fun Button.createNeo4jImportButton(op: () -> Unit) {
                     Neo4jLoader().loadGraph(data)?.let {
                         graphView = it
                         op()
-                        hide()
-
                     }
                 }
+                hide()
             }
         }
     }
@@ -152,11 +151,9 @@ fun Button.createNeo4jExportButton() {
                 } else {
                     data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
                     Neo4jLoader().saveGraph(graphView, data)
-                    hide()
-
                 }
+                hide()
             }
-
         }
     }
 }

@@ -17,7 +17,7 @@ import tornadofx.getChildList
  * By zishkaz
  */
 
-internal class Import : ApplicationTest() {
+internal class VertexWindow : ApplicationTest() {
 
     private fun generateGraph(): GraphView {
 

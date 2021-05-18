@@ -22,7 +22,7 @@ class SQLiteLoader : GraphLoader, Controller() {
         val connection =
             DriverManager.getConnection("jdbc:sqlite:$data") ?: throw SQLException("Cannot connect to database")
         val getVerticesStatement = try {
-            connection.prepareStatement("SELECT id, posX, posY, centralityRang, communityID FROM vertices")
+            connection.prepareStatement("SELECT id, posX, posY, centralityRang, radiusSummand, communityID FROM vertices")
         } catch (ex: Exception) {
             logger.info("Connection to SQLite failed or DataBase is empty.")
             alert(
@@ -46,7 +46,9 @@ class SQLiteLoader : GraphLoader, Controller() {
                     vertex,
                     result.getObject("posX")?.toString()?.toDouble() ?: Random.nextDouble(1000.0),
                     result.getObject("posY")?.toString()?.toDouble() ?: Random.nextDouble(1000.0)
-                )
+                ).apply {
+                    this.radiusSummand.value = result.getObject("radiusSummand")?.toString()?.toDouble() ?: 0.0
+                }
                 vertices.add(vertexView)
             }
         } catch (e: Exception) {
@@ -85,8 +87,8 @@ class SQLiteLoader : GraphLoader, Controller() {
             DriverManager.getConnection("jdbc:sqlite:$data") ?: throw SQLException("Cannot connect to database")
         connection.createStatement().also {
             try {
-                it.execute("CREATE TABLE vertices(num INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL, posX DOUBLE, posY DOUBLE, centralityRang DOUBLE, communityID INTEGER);")
-                it.execute("CREATE TABLE edges(edgeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, first INTEGER NOT NULL, second INTEGER NOT NULL, weight DOUBLE);")
+                it.execute("CREATE TABLE IF NOT EXISTS vertices(num INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL, posX DOUBLE, posY DOUBLE, centralityRang DOUBLE, radiusSummand DOUBLE, communityID INTEGER);")
+                it.execute("CREATE TABLE IF NOT EXISTS edges(edgeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, first INTEGER NOT NULL, second INTEGER NOT NULL, weight DOUBLE);")
             } catch (e: Exception) {
                 logger.error("Couldn't create tables!")
                 alert(Alert.AlertType.ERROR, "ERROR\nCouldn't create tables!")
@@ -99,11 +101,15 @@ class SQLiteLoader : GraphLoader, Controller() {
             connection.createStatement().also {
                 try {
                     it.execute(
-                        "INSERT INTO vertices (id, posX, posY, centralityRang, communityID) VALUES ('${
+                        "INSERT INTO vertices (id, posX, posY, centralityRang, radiusSummand, communityID) VALUES ('${
                             node.vertex.id
                         }', ${node.centerX},${node.centerY}, ${
                             if (node.vertex.centralityRang != -1.0) node.vertex.centralityRang else null
-                        }, ${if (node.vertex.communityID != -1) node.vertex.communityID else null});"
+                        }, ${
+                            if (node.radiusSummand.value != 0.0) node.radiusSummand.value else null
+                        }, ${
+                            if (node.vertex.communityID != -1) node.vertex.communityID else null
+                        });"
                     )
                 } catch (e: Exception) {
                     alert(Alert.AlertType.ERROR, "ERROR\nVertices can't be added to a specified database!")

@@ -38,7 +38,8 @@ class FileLoader : GraphLoader, Controller() {
             val posX = if (jsonObject.containsKey("posX")) jsonObject.getDouble("posX") else Random.nextDouble(1000.0)
             val posY = if (jsonObject.containsKey("posY")) jsonObject.getDouble("posY") else Random.nextDouble(1000.0)
             val vertex = Vertex(id, centralityRang, communityID)
-            VertexView(vertex, posX, posY)
+            val radiusSummand = if (jsonObject.containsKey("radiusSummand")) jsonObject.getDouble("radiusSummand") else 0.0
+            VertexView(vertex, posX, posY).apply { this.radiusSummand.value = radiusSummand }
         } ?: run {
             logger.error("Empty graph can't be loaded!")
             alert(Alert.AlertType.ERROR, "ERROR!\nEmpty graph can't be loaded!")
@@ -82,6 +83,7 @@ class FileLoader : GraphLoader, Controller() {
             if (node.vertex.communityID != -1) vertexJson.add("communityID", node.vertex.communityID)
             vertexJson.add("posX", node.centerX)
             vertexJson.add("posY", node.centerY)
+            vertexJson.add("radiusSummand", node.radiusSummand.value)
             verticesJson.add(vertexJson)
         }
         json.add("vertices", verticesJson)
