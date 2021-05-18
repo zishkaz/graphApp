@@ -1,5 +1,6 @@
 package ru.team10.graphApp.controller.algorithms
 
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.control.Alert
 import javafx.scene.paint.Color
 import mu.KotlinLogging
@@ -9,7 +10,7 @@ import ru.team10.graphApp.view.GraphView
 import tornadofx.alert
 import java.io.File
 
-internal var leidenResolution: Double = 0.2
+internal var leidenResolution = SimpleDoubleProperty(0.2)
 const val leidenPathname = "leidenOutput.csv"
 const val utilityPathname = "leidenUtil.txt"
 
@@ -17,7 +18,7 @@ const val utilityPathname = "leidenUtil.txt"
 class Leiden(
     private val graph: GraphView
 ) {
-    val logger = KotlinLogging.logger {}
+    private val logger = KotlinLogging.logger {}
     fun startLeiden(resolution: Double) {
         logger.info("Started community detection algorithm.")
         val dataConverter = DataConverter(graph)
@@ -75,7 +76,7 @@ internal fun colorAccordingToCommunity(graph: GraphView) {
     logger.info("The painting of the vertexes depending on the community has started.")
     try {
         val communityCount = 1 + graph.vertices().maxOf { it.vertex.communityID }
-        val step = 16777216 / communityCount
+        val step = 16777216 / (communityCount + 179)
         var colorNow = step
         val communityToColor = hashMapOf<Int, Color>()
         repeat(communityCount) {

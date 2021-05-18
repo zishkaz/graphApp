@@ -38,7 +38,6 @@ class VertexView(
         }
 
     var infoText = text {}
-
     val window = StackPane().apply {
         isVisible = false
         add(Rectangle(190.0, 100.0, Color.CORAL))

@@ -18,13 +18,13 @@ fun TitledPane.createCommunityMenu() {
     isExpanded = false
     vbox(10) {
         label("Resolution")
-        textfield().createTextField("Resolution", Layout.jitterTolerance)
+        textfield().createTextField("Resolution", leidenResolution)
         button("Start Leiden algorithm") {
             action {
                 lateinit var leiden: Leiden
                 runAsync {
                     leiden = Leiden(graphView)
-                    leiden.startLeiden(leidenResolution)
+                    leiden.startLeiden(leidenResolution.value)
                     leiden.setCommunity()
                 }
             }

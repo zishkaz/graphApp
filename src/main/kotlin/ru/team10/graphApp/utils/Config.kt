@@ -41,7 +41,7 @@ fun loadConfigFile(file: File) {
         e.printStackTrace()
         return
     }
-    leidenResolution = config.communityDetectionConstants.resolution
+    leidenResolution.value = config.communityDetectionConstants.resolution
     vertexRadius.value = config.vertexRadius
     Layout.jitterTolerance.value = config.layoutConstants.jitterTolerance
     Layout.gravity.value = config.layoutConstants.gravity
@@ -60,17 +60,17 @@ fun saveConfig(file: File) {
     vertexColorMap["g"] = (vertexColor.green * 255).toInt()
     vertexColorMap["b"] = (vertexColor.blue * 255).toInt()
     generalMap["vertexColor"] = vertexColorMap
-    generalMap["vertexRadius"] = vertexRadius
+    generalMap["vertexRadius"] = vertexRadius.value
     val layoutConstantsMap = hashMapOf<String, Any>()
-    layoutConstantsMap["scaling"] = Layout.scaling
-    layoutConstantsMap["gravity"] = Layout.gravity
-    layoutConstantsMap["jitterTolerance"] = Layout.jitterTolerance
-    layoutConstantsMap["isBarnesHutActive"] = Layout.isBarnesHutActive
+    layoutConstantsMap["scaling"] = Layout.scaling.value
+    layoutConstantsMap["gravity"] = Layout.gravity.value
+    layoutConstantsMap["jitterTolerance"] = Layout.jitterTolerance.value
+    layoutConstantsMap["isBarnesHutActive"] = Layout.isBarnesHutActive.value
     generalMap["layoutConstants"] = layoutConstantsMap
     val communityDetectionConstantsMap = hashMapOf<String, Any>()
-    communityDetectionConstantsMap["resolution"] = leidenResolution
+    communityDetectionConstantsMap["resolution"] = leidenResolution.value
     generalMap["communityDetectionConstants"] = communityDetectionConstantsMap
-//    generalMap["showEdges"] = showEdges.isSelected
+    generalMap["showEdges"] = showEdges.isSelected
     val writer = StringWriter()
     yaml.dump(generalMap, writer)
     file.writeText(writer.toString())

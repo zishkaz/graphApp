@@ -3,7 +3,6 @@ package ru.team10.graphApp.controller.algorithms
 import javafx.animation.AnimationTimer
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Point2D
 import ru.team10.graphApp.view.EdgeView
 import ru.team10.graphApp.view.GraphView

@@ -1,6 +1,6 @@
 package ru.team10.graphApp.model
 
-data class Vertex(val id: String, var centralityRang: Double, var communityID: Int) : Comparable<Vertex> {
+data class Vertex(val id: String, var centralityRang: Double = -1.0, var communityID: Int = -1) : Comparable<Vertex> {
 
     var shortestDist: Double = Double.MAX_VALUE
     var mass = 1

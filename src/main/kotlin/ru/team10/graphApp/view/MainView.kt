@@ -5,6 +5,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.TextField
 import javafx.scene.control.ToggleButton
 import javafx.scene.input.KeyCode
+import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import ru.team10.graphApp.controller.GraphZoomDragController
@@ -16,6 +17,7 @@ import tornadofx.*
 internal var showEdges = ToggleButton()
 internal var graphView = GraphView(Graph())
 internal var layoutAnim = Layout.applyForceAtlas2(graphView)
+internal lateinit var rootBorderPan: BorderPane
 
 internal fun TextField.createTextField(constantName: String, prop: SimpleDoubleProperty): TextField {
 
@@ -43,6 +45,7 @@ internal fun TextField.createTextField(constantName: String, prop: SimpleDoubleP
 internal class MainView : View("Graph Application") {
 
     override val root = borderpane {
+        rootBorderPan = this
         stylesheets.add("1.css")
 
         val controller = GraphZoomDragController()

@@ -10,9 +10,9 @@ import tornadofx.Controller
 import java.util.*
 
 object Centrality : Controller() {
+
     private val logger = KotlinLogging.logger {}
     var wasDone = false
-    //var progress = SimpleBooleanProperty(false)
 
     private data class ExtraVertexData(val vertID: String) {
         var previous: Vertex? = null
@@ -29,7 +29,6 @@ object Centrality : Controller() {
 
     fun applyHarmonicCentrality(graph: GraphView) {
         logger.info("The algorithm for finding key vertices has been started.")
-        //progress.value = true
         val edges = graph.edges().map { it.edge }.toList()
         val vert = graph.vertices().map { it.vertex }.toList()
         val verticesExtraData = hashMapOf<String, ExtraVertexData>()
@@ -44,7 +43,6 @@ object Centrality : Controller() {
 
         wasDone = true
         logger.info("The algorithm for finding key vertices has been completed.")
-        //progress.value = false
     }
 
     private fun setUpVertices(
