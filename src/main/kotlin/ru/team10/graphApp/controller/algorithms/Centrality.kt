@@ -17,7 +17,6 @@ internal object Centrality : Controller() {
     private data class ExtraVertexData(val vertex: Vertex) : Comparable<ExtraVertexData> {
 
         var shortestDist: Double = Double.MAX_VALUE
-        var previous: Vertex? = null
         var neighbours = HashMap<Vertex, Double>()
 
         override fun compareTo(other: ExtraVertexData): Int {
@@ -61,7 +60,6 @@ internal object Centrality : Controller() {
 
         val q = TreeSet<ExtraVertexData>()
         for (i in vert.indices) {
-            verticesExtraData[vert[i].id]!!.previous = if (vert[i] == start) start else null
             verticesExtraData[vert[i].id]!!.shortestDist = if (vert[i] == start) 0.0 else Double.MAX_VALUE
             q.add(verticesExtraData[vert[i].id]!!)
         }
@@ -81,7 +79,6 @@ internal object Centrality : Controller() {
                     q.remove(neigh)
                     neigh.shortestDist = alternateDist
                     sumOfShortestPaths += 1.0 / alternateDist
-                    neigh.previous = currVertex.vertex
                     q.add(neigh)
                 }
             }
