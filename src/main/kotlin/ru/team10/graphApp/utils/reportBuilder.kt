@@ -3,7 +3,7 @@ package ru.team10.graphApp.utils
 import ru.team10.graphApp.view.GraphView
 import java.io.File
 
-fun buildCommunityDetectionReport(graph: GraphView, file: File) {
+internal fun buildCommunityDetectionReport(graph: GraphView, file: File) {
 
     val communityIdToNodes = hashMapOf<Int, HashSet<String>>()
     for (node in graph.vertices().map { it.vertex }) {
@@ -19,7 +19,7 @@ fun buildCommunityDetectionReport(graph: GraphView, file: File) {
     }
 }
 
-fun buildCentralityReport(graph: GraphView, file: File) {
+internal fun buildCentralityReport(graph: GraphView, file: File) {
 
     val nodes = graph.vertices().map { it.vertex }.sortedByDescending { it.centralityRang }
     file.writeText("")
