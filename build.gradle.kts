@@ -10,11 +10,16 @@ plugins {
 repositories {
     jcenter()
     maven{url = uri("https://jitpack.io" )}
+    mavenCentral()
 }
 
 sourceSets.main {
-    java.srcDirs("src")
+    java.srcDirs("src/kotlin")
     resources.srcDirs("src/resources")
+}
+
+sourceSets.test {
+    java.srcDirs("src/test")
 }
 
 
@@ -22,9 +27,15 @@ application {
     mainClass.set("ru.team10.graphApp.MainApp")
 }
 
-
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
+    //JUnit
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.testfx:testfx-core:4.0.16-alpha")
+    testImplementation("org.testfx:testfx-junit5:4.0.16-alpha")
 
     //Leiden
     implementation("com.github.CWTSLeiden:networkanalysis:1.1.0")
@@ -59,6 +70,10 @@ compileKotlin.kotlinOptions {
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
     jvmTarget = "1.8"
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 javafx {
