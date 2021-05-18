@@ -14,7 +14,7 @@ internal var leidenResolution = SimpleDoubleProperty(0.2)
 const val leidenPathname = "leidenOutput.csv"
 const val utilityPathname = "leidenUtil.txt"
 
-class Leiden(
+internal class Leiden(
     private val graph: GraphView
 ) {
 

@@ -7,7 +7,7 @@ import ru.team10.graphApp.view.layoutAnim
 import ru.team10.graphApp.view.graphView
 import tornadofx.*
 
-fun TitledPane.createGraphMenu(root: BorderPane) {
+internal fun TitledPane.createGraphMenu(root: BorderPane) {
 
     isExpanded = false
     vbox(5) {

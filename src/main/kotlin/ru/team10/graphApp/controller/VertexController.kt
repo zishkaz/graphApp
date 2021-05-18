@@ -5,7 +5,7 @@ import javafx.scene.input.MouseEvent
 import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 
-class VertexController : Controller() {
+internal class VertexController : Controller() {
 
     fun entered(event: MouseEvent) {
 

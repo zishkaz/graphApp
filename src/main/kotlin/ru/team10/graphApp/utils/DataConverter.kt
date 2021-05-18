@@ -4,7 +4,7 @@ import ru.team10.graphApp.controller.algorithms.utilityPathname
 import ru.team10.graphApp.view.GraphView
 import java.io.File
 
-class DataConverter(
+internal class DataConverter(
     private val graph: GraphView,
 ) {
     fun prepareDataForClustering() {

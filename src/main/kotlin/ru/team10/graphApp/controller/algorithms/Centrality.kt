@@ -9,7 +9,7 @@ import ru.team10.graphApp.view.VertexView
 import tornadofx.Controller
 import java.util.*
 
-object Centrality : Controller() {
+internal object Centrality : Controller() {
 
     private val logger = KotlinLogging.logger {}
     var wasDone = false

@@ -12,7 +12,7 @@ import ru.team10.graphApp.controller.loader.SQLiteLoader
 import ru.team10.graphApp.view.graphView
 import tornadofx.*
 
-fun Button.createJsonImportButton(op: () -> Unit) {
+internal fun Button.createJsonImportButton(op: () -> Unit) {
 
     action {
         val window = Popup()
@@ -31,7 +31,7 @@ fun Button.createJsonImportButton(op: () -> Unit) {
     }
 }
 
-fun Button.createSQLiteImportButton(op: () -> Unit) {
+internal fun Button.createSQLiteImportButton(op: () -> Unit) {
 
     text = "SQLite"
     setOnMouseReleased {
@@ -54,7 +54,7 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
     }
 }
 
-fun Button.createNeo4jImportButton(op: () -> Unit) {
+internal fun Button.createNeo4jImportButton(op: () -> Unit) {
 
     setOnMouseReleased {
         vbox(5) {
@@ -90,7 +90,7 @@ fun Button.createNeo4jImportButton(op: () -> Unit) {
     }
 }
 
-fun Button.createJsonExportButton() {
+internal fun Button.createJsonExportButton() {
 
     action {
         val window = Popup()
@@ -105,7 +105,7 @@ fun Button.createJsonExportButton() {
     }
 }
 
-fun Button.createSQLiteExportButton() {
+internal fun Button.createSQLiteExportButton() {
 
     setOnMouseReleased {
         hbox {
@@ -124,7 +124,7 @@ fun Button.createSQLiteExportButton() {
     }
 }
 
-fun Button.createNeo4jExportButton() {
+internal fun Button.createNeo4jExportButton() {
 
     setOnMouseReleased {
 

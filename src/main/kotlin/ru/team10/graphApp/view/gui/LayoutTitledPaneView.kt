@@ -6,7 +6,7 @@ import ru.team10.graphApp.view.layoutAnim
 import ru.team10.graphApp.view.createTextField
 import tornadofx.*
 
-fun TitledPane.createLayoutMenu(root: View) {
+internal fun TitledPane.createLayoutMenu(root: View) {
 
     isExpanded = false
     vbox(5) {

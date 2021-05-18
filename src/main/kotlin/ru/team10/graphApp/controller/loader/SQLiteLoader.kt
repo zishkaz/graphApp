@@ -13,7 +13,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.random.Random
 
-class SQLiteLoader : GraphLoader, Controller() {
+internal class SQLiteLoader : GraphLoader, Controller() {
 
     companion object : KLogging()
 
