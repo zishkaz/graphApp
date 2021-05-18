@@ -35,7 +35,7 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
 
     text = "SQLite"
     setOnMouseReleased {
-        isDisable = true
+        //isDisable = true
         hbox {
             val input = textfield()
             input.promptText = ("Enter URI")
@@ -47,7 +47,7 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
                         graphView = it
                         op()
                         hide()
-                        isDisable = false
+
                     }
                 }
             }
@@ -58,7 +58,7 @@ fun Button.createSQLiteImportButton(op: () -> Unit) {
 fun Button.createNeo4jImportButton(op: () -> Unit) {
 
     setOnMouseReleased {
-        isDisable = true
+        //isDisable = true
         vbox(5) {
             var data: String
 
@@ -79,13 +79,14 @@ fun Button.createNeo4jImportButton(op: () -> Unit) {
                         Alert.AlertType.WARNING,
                         "You have forgotten write in port or login or password!"
                     )
-                }
-                data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
-                Neo4jLoader().loadGraph(data)?.let {
-                    graphView = it
-                    op()
-                    hide()
-                    isDisable = false
+                } else {
+                    data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
+                    Neo4jLoader().loadGraph(data)?.let {
+                        graphView = it
+                        op()
+                        hide()
+
+                    }
                 }
             }
         }
@@ -110,7 +111,7 @@ fun Button.createJsonExportButton() {
 fun Button.createSQLiteExportButton() {
 
     setOnMouseReleased {
-        isDisable = true
+        //isDisable = true
         hbox {
             val input = textfield()
             input.promptText = ("Enter URI")
@@ -120,7 +121,7 @@ fun Button.createSQLiteExportButton() {
                     data = input.text
                     SQLiteLoader().saveGraph(graphView, data)
                     hide()
-                    isDisable = false
+
                 }
             }
         }
@@ -130,7 +131,7 @@ fun Button.createSQLiteExportButton() {
 fun Button.createNeo4jExportButton() {
 
     setOnMouseReleased {
-        isDisable = true
+
         vbox(5) {
             var data: String
 
@@ -155,7 +156,7 @@ fun Button.createNeo4jExportButton() {
                     data = uri.text.plus("\n").plus(username.text).plus("\n").plus(password.text)
                     Neo4jLoader().saveGraph(graphView, data)
                     hide()
-                    isDisable = false
+
                 }
             }
 

@@ -1,6 +1,7 @@
 package ru.team10.graphApp.controller.loader
 
 import javafx.scene.control.Alert
+import mu.KLogging
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
@@ -14,12 +15,22 @@ import kotlin.random.Random
 
 class SQLiteLoader : GraphLoader, Controller() {
 
-    override fun loadGraph(data: String): GraphView? {
+    companion object : KLogging()
 
+    override fun loadGraph(data: String): GraphView? {
+        logger.info("Started loading graph via SQLite")
         val connection =
             DriverManager.getConnection("jdbc:sqlite:$data") ?: throw SQLException("Cannot connect to database")
-        val getVerticesStatement =
+        val getVerticesStatement = try {
             connection.prepareStatement("SELECT id, posX, posY, centralityRang, communityID FROM vertices")
+        } catch (ex: Exception) {
+            logger.info("Connection to SQLite failed or DataBase is empty.")
+            alert(
+                Alert.AlertType.INFORMATION,
+                "Information.\nCannot connect to SQLite or DataBase is empty.\nCheck out URI."
+            )
+            return null
+        }
         val getEdgesStatement = connection.prepareStatement("SELECT first, second, weight FROM edges")
         val vertices = mutableListOf<VertexView>()
         val edges = mutableListOf<Edge>()
@@ -39,6 +50,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 vertices.add(vertexView)
             }
         } catch (e: Exception) {
+            logger.error("Vertices can't be read from a specified database!")
             alert(Alert.AlertType.ERROR, "ERROR\nVertices can't be read from a specified database!")
             return null
         }
@@ -55,6 +67,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 edges.add(edge)
             }
         } catch (e: Exception) {
+            logger.error("Edges can't be read from a specified database!")
             alert(Alert.AlertType.ERROR, "ERROR\nEdges can't be read from a specified database!")
             return null
         }
@@ -62,10 +75,12 @@ class SQLiteLoader : GraphLoader, Controller() {
         vertices.forEach { graph.addVertex(it.vertex) }
         edges.forEach { graph.addEdge(it) }
         val graphView = GraphView(graph, vertices)
+        logger.info { "Graph has been loaded via SQLite." }
         return if (validateGraph(graphView)) graphView else null
     }
 
     override fun saveGraph(graph: GraphView, data: String) {
+        logger.info("Started saving graph via SQLite")
         val connection =
             DriverManager.getConnection("jdbc:sqlite:$data") ?: throw SQLException("Cannot connect to database")
         connection.createStatement().also {
@@ -73,6 +88,7 @@ class SQLiteLoader : GraphLoader, Controller() {
                 it.execute("CREATE TABLE vertices(num INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL, posX DOUBLE, posY DOUBLE, centralityRang DOUBLE, communityID INTEGER);")
                 it.execute("CREATE TABLE edges(edgeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, first INTEGER NOT NULL, second INTEGER NOT NULL, weight DOUBLE);")
             } catch (e: Exception) {
+                logger.error("Couldn't create tables!")
                 alert(Alert.AlertType.ERROR, "ERROR\nCouldn't create tables!")
                 return
             }
@@ -118,5 +134,6 @@ class SQLiteLoader : GraphLoader, Controller() {
                 }
             }
         }
+        logger.info { "Graph has been saved via SQLite." }
     }
 }

@@ -1,7 +1,7 @@
 package ru.team10.graphApp.controller.loader
 
 import javafx.scene.control.Alert
-import mu.KotlinLogging
+import mu.KLogging
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import ru.team10.graphApp.model.Edge
@@ -13,14 +13,26 @@ import tornadofx.Controller
 import tornadofx.alert
 import kotlin.random.Random
 
-private val logger = KotlinLogging.logger { }
-
 class Neo4jLoader : GraphLoader, Controller() {
 
+    companion object : KLogging()
+
     override fun loadGraph(data: String): GraphView? {
+        logger.info { "Started loading graph via Neo4j." }
         val (uri, user, password) = data.split("\n")
-        val driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
+
+        val driver = try {
+            GraphDatabase.driver(uri, AuthTokens.basic(user, password))
+        } catch (ex: Exception) {
+            logger.info("Connection to Neo4j failed.")
+            alert(
+                Alert.AlertType.INFORMATION,
+                "Information.\nCannot connect to Neo4j\nCheck out URI, username and password then try again."
+            )
+            return null
+        }
         val session = driver.session()
+
         val vertices = mutableMapOf<String, VertexView>()
         val graph = Graph()
         var graphView = GraphView(graph, vertices.values.toList())
@@ -48,7 +60,6 @@ class Neo4jLoader : GraphLoader, Controller() {
                         rec["posY"]?.toString()?.toDouble() ?: Random.nextDouble(1000.0)
                     )
                     vertices[rec["id"].asString()] = vertexView
-                    // TODO(LOGGER)
                 }
 
                 getEdgesStatemen.forEach { rec ->
@@ -62,25 +73,36 @@ class Neo4jLoader : GraphLoader, Controller() {
                         }
                     }
                     edge?.let { edges.add(it) }
-                    // TODO(LOGGER)
                 }
 
                 vertices.forEach { graph.addVertex(it.value.vertex) }
                 edges.forEach { graph.addEdge(it) }
                 graphView = GraphView(graph, vertices.values.toList())
-                // TODO(LOGGER)
+                logger.info { "Graph has been loaded via Neo4j." }
             } catch (ex: Exception) {
                 tx.rollback()
-                logger.error(ex) { "Cannot load all graph" }
-                alert(Alert.AlertType.ERROR, "ERROR\nCannot load all graph!")
+                logger.error(ex) { "Cannot load all graph via Neo4j" }
+                alert(Alert.AlertType.ERROR, "ERROR\nCannot load all graph via Neo4j!")
             }
         }
         return if (validateGraph(graphView)) graphView else null
     }
 
     override fun saveGraph(graph: GraphView, data: String) {
+        logger.info("Started saving graph via Neo4j")
         val (uri, user, password) = data.split("\n")
-        val driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
+
+        val driver = try {
+            GraphDatabase.driver(uri, AuthTokens.basic(user, password))
+        } catch (ex: Exception) {
+            logger.info("Connection to Neo4j failed.")
+            alert(
+                Alert.AlertType.INFORMATION,
+                "Information.\nCannot connect to Neo4j\nCheck out URI, username and password then try again."
+            )
+            return
+        }
+
         val session = driver.session()
         session.writeTransaction { tx ->
             try {
@@ -97,7 +119,6 @@ class Neo4jLoader : GraphLoader, Controller() {
                             "communityID" to node.vertex.communityID
                         ) as Map<String, Any?>?
                     )
-                    // TODO(LOGGER)
                 }
                 for (edge in graph.edges()) {
                     tx.run(
@@ -111,10 +132,11 @@ class Neo4jLoader : GraphLoader, Controller() {
                         ) as Map<String, Any?>?
                     )
                 }
+                logger.info("Graph has been saved via Neo4j.")
             } catch (ex: Exception) {
                 tx.rollback()
-                logger.error(ex) { "Cannot save all graph" }
-                alert(Alert.AlertType.ERROR, "ERROR\nCannot save all graph!")
+                logger.error(ex) { "Cannot save all graph via Neo4j" }
+                alert(Alert.AlertType.ERROR, "ERROR\nCannot save all graph via Neo4j!")
             }
         }
 

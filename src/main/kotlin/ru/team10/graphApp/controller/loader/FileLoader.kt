@@ -1,6 +1,7 @@
 package ru.team10.graphApp.controller.loader
 
 import javafx.scene.control.Alert
+import mu.KLogging
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Graph
 import ru.team10.graphApp.model.Vertex
@@ -18,13 +19,16 @@ import kotlin.random.Random
 
 class FileLoader : GraphLoader, Controller() {
 
-    override fun loadGraph(data: String): GraphView? {
+    companion object : KLogging()
 
+    override fun loadGraph(data: String): GraphView? {
+        logger.info("Started loading graph via .json")
         val json = loadJsonObject(Path(data))
         val vertices = json.getJsonArray("vertices")?.map {
             val jsonObject = it.asJsonObject()
             val id =
                 if (jsonObject.containsKey("id")) jsonObject.getString("id") else {
+                    logger.error("Some vertex from the file $data has no ID!")
                     alert(Alert.AlertType.ERROR, "ERROR!\nVertex doesn't have id!")
                     return null
                 }
@@ -36,6 +40,7 @@ class FileLoader : GraphLoader, Controller() {
             val vertex = Vertex(id, centralityRang, communityID)
             VertexView(vertex, posX, posY)
         } ?: run {
+            logger.error("Empty graph can't be loaded!")
             alert(Alert.AlertType.ERROR, "ERROR!\nEmpty graph can't be loaded!")
             return null
         }
@@ -43,11 +48,13 @@ class FileLoader : GraphLoader, Controller() {
             val jsonObject = it.asJsonObject()
             val first = jsonObject.getInt("first")
             if (first < 0 || first >= vertices.size) {
+                logger.error("Wrong edge first node number!")
                 alert(Alert.AlertType.ERROR, "ERROR\nWrong edge first node number!")
                 return null
             }
             val second = jsonObject.getInt("second")
             if (second >= vertices.size || second < 0) {
+                logger.error("Wrong edge second node number!")
                 alert(Alert.AlertType.ERROR, "ERROR\nWrong edge second node number!")
                 return null
             }
@@ -58,10 +65,12 @@ class FileLoader : GraphLoader, Controller() {
         vertices.forEach { graph.addVertex(it.vertex) }
         edges?.forEach { graph.addEdge(it) }
         val graphView = GraphView(graph, vertices)
+        logger.info("Graph has been loaded via .json.")
         return if (validateGraph(graphView)) graphView else null
     }
 
     override fun saveGraph(graph: GraphView, data: String) {
+        logger.info("Started saving graph via .json")
         val json = Json.createObjectBuilder()
         val verticesJson = Json.createArrayBuilder()
         val vertexToNumber = hashMapOf<VertexView, Int>()
@@ -88,5 +97,6 @@ class FileLoader : GraphLoader, Controller() {
         val file = File(data)
         file.createNewFile()
         file.writeText(json.build().toString())
+        logger.info("Graph has been saved via .json.")
     }
 }

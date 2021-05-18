@@ -1,17 +1,16 @@
 package ru.team10.graphApp.controller.algorithms
 
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.paint.Color
+import mu.KotlinLogging
 import ru.team10.graphApp.model.Edge
 import ru.team10.graphApp.model.Vertex
 import ru.team10.graphApp.view.GraphView
 import ru.team10.graphApp.view.VertexView
-import ru.team10.graphApp.view.vertexRadius
 import tornadofx.Controller
 import java.util.*
 
 object Centrality : Controller() {
-
+    private val logger = KotlinLogging.logger {}
     var wasDone = false
     //var progress = SimpleBooleanProperty(false)
 
@@ -29,6 +28,7 @@ object Centrality : Controller() {
     }
 
     fun applyHarmonicCentrality(graph: GraphView) {
+        logger.info("The algorithm for finding key vertices has been started.")
         //progress.value = true
         val edges = graph.edges().map { it.edge }.toList()
         val vert = graph.vertices().map { it.vertex }.toList()
@@ -43,6 +43,7 @@ object Centrality : Controller() {
         if (!wasDone) setRadius(graph)
 
         wasDone = true
+        logger.info("The algorithm for finding key vertices has been completed.")
         //progress.value = false
     }
 
