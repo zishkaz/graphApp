@@ -1,0 +1,35 @@
+.root{
+  -fx-font-family: "Courier New";
+  -fx-font-weight: bold;
+}
+
+.titled-pane > .title {
+  -fx-transition-duration: 0.4s;
+}
+
+.titled-pane:hover > .title {
+  -fx-background-color: #83c5be;
+  -fx-color: white;
+}
+
+.button {
+  -fx-transition-duration: 0.4s;
+}
+
+.button:hover {
+  -fx-background-color: #cbf3f0;
+  -fx-color: white;
+  -fx-border-color: #83c5be;
+  -fx-border-radius: 5;
+}
+
+.toggle-button {
+  -fx-transition-duration: 0.4s;
+}
+
+.toggle-button:hover {
+  -fx-background-color: #cbf3f0;
+  -fx-color: white;
+  -fx-border-color: #83c5be;
+  -fx-border-radius: 5;
+}
