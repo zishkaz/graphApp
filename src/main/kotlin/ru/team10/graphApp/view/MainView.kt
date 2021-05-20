@@ -46,7 +46,7 @@ internal class MainView : View("Graph Application") {
 
     override val root = borderpane {
         rootBorderPan = this
-        stylesheets.add("1.css")
+        stylesheets.add("StyleMainView.css")
 
         val controller = GraphZoomDragController()
         this.setOnScroll {

@@ -1,5 +1,28 @@
 # Graph & Network visualization
 
+## Usage
+
+### Clone the repository
+```
+git clone https://github.com/zishkaz/graphApp.git
+```
+
+### Command Line
+```
+gradlew run
+```
+
+## Features
+
+- Saving results of Centrality and Community detection analyzes to TXT file
+- Showing the main information (ID, Centrality rank, Community ID) by pressing the node
+- Saving configurations(such as settings, radius, colour values)
+
+## Import / Export
+- JSON
+- SQLite
+- Neo4j
+
 ## Layout
 
 Layout algorithms give the shape to the graph. 
@@ -36,15 +59,3 @@ then assigns each node a score based on its sum of the shortest paths.
 
 - finds the individuals who are best placed to influence
 the entire network most quickly.
-
-## Features
-
-- Saving results of Centrality and Community detection analyzes to TXT file
-- Showing the main information (ID, Centrality rank, Community ID) by pressing the node
-- Saving configurations(such as settings, radius, colour values)
-
-
-## Import / Export
-- JSON
-- SQLite
-- Neo4j

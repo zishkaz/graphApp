@@ -14,6 +14,7 @@ internal fun TitledPane.createCentralityMenu() {
     isExpanded = false
     vbox(10) {
         button("START") {
+            id = ("startCentrality")
             action {
                 runAsync {
                     Centrality.applyHarmonicCentrality(graphView)
@@ -37,6 +38,7 @@ internal fun TitledPane.createCentralityMenu() {
         }
 
         button("COLOR") {
+            id = ("colorCentrality")
             action {
                 if (graphView.vertices().map { it.vertex.centralityRang }.contains(-1.0)) {
                     alert(Alert.AlertType.ERROR, "ERROR!\nRun the algorithm before using its result!")
