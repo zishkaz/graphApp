@@ -10,7 +10,6 @@ plugins {
 repositories {
     jcenter()
     maven{url = uri("https://jitpack.io" )}
-    mavenCentral()
 }
 
 sourceSets.main {

@@ -1,4 +1,4 @@
-# Graph & Network visualization
+# Graph & Network visualization application
 
 ## Usage
 

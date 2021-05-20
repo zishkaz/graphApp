@@ -53,6 +53,7 @@ internal class VertexWindow : ApplicationTest() {
             rootBorderPan.center.add(graphView)
             layoutAnim = Layout.applyForceAtlas2(graphView)
         }
+        Thread.sleep(3000)
         clickOn("Layout")
         Thread.sleep(300)
         clickOn("START")
